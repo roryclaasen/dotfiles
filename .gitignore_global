@@ -1,0 +1,15 @@
+.cache
+.local
+.npm
+.npm-global
+.npmrc
+.nvm
+Desktop
+Documents
+Downloads
+Library
+Movies
+Music
+node_modules
+Pictures
+Public
