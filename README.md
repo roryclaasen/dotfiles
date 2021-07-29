@@ -4,9 +4,9 @@
 
 ### Using Git and the setup script
 
-You can clone the repository wherever you want. (I like to keep it in ~\dotfiles.) The setup script will setup symlinks to the cloned repository.
+You can clone the repository wherever you want (well on same drive as `$home`). (I like to keep it in `$home\dotfiles`.) The setup script will setup symlinks to the cloned repository.
 
-From PowerShell
+From PowerShell:
 
 ```posh
 git clone https://github.com/roryclaasen/dotfiles.git; cd dotfiles; . .\setup.ps1
