@@ -1,0 +1,5 @@
+net.maxwait=450
+filesys.bufsize=10M
+net.tcpsize=2M
+net.parallel.max=12
+net.rfc3484=1
