@@ -1,15 +1,27 @@
+# Compiled source
+*.pyc
+*.pyo
+
+# IDE specific
+*.project
+*.tmp
+*.tmproj
+*.tmproject
+
+# OS generated files
+._*
 .cache
+.DS_Store
+.Trashes
+desktop.ini
+Thumbs.db
+
+# Other dev-related files
 .local
 .npm
 .npm-global
 .npmrc
 .nvm
-Desktop
-Documents
-Downloads
-Library
-Movies
-Music
+*.bak
+*.sass-cache
 node_modules
-Pictures
-Public
