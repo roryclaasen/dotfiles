@@ -92,6 +92,9 @@
     co = checkout
     cob = checkout -b
 
+    # add
+    aa = add --all
+
     # push
     p = push
     pa = push --all
