@@ -70,7 +70,7 @@
     prompt = false
 
 [difftool "bc4"]
-	cmd = "\"C:/Program Files/Beyond Compare 4/bcomp.exe\" \"$LOCAL\" \"$REMOTE\""
+	cmd = "\"C:/Program Files/Beyond Compare 4/BCompare.exe\" \"$LOCAL\" \"$REMOTE\""
 
 [merge]
 	tool = bc
@@ -80,8 +80,7 @@
     keepBackup = false
 
 [mergetool "bc"]
-	cmd = "\"C:/Program Files/Beyond Compare 4/bcomp.exe\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\""
-
+	cmd = "\"C:/Program Files/Beyond Compare 4/BCompare.exe\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\""
 
 [alias]
     # branch
