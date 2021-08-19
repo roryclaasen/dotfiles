@@ -7,9 +7,9 @@
     path = ~/.gitconfig-local
 
 [core]
-	safecrlf = false
-	editor = 'C:/Program Files/Notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin
-	fscache = true
+    safecrlf = false
+    editor = 'C:/Program Files/Notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin
+    fscache = true
     excludesfile = ~/.gitignore_global
 
 [color]
@@ -36,55 +36,55 @@
     untracked = red
 
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
 
 [branch]
     # set up 'git pull' to rebase instead of merge
     autosetuprebase = always
 
 [pull]
-	rebase = true
+    rebase = true
 
 [rebase]
-	autostash = true
+    autostash = true
 
 [submodule]
-	fetchjobs = 8
+    fetchjobs = 8
 
 [credential]
-	helper = manager-core
+    helper = manager-core
 
 [credential "https://dev.azure.com"]
-	useHttpPath = true
+    useHttpPath = true
 
 [diff]
     renames = copies
     mnemonicprefix = true
     compactionHeuristic = true
-	tool = bc4
+    tool = bc4
 
 [difftool]
     prompt = false
 
 [difftool "bc4"]
-	cmd = "\"C:/Program Files/Beyond Compare 4/BCompare.exe\" \"$LOCAL\" \"$REMOTE\""
+    cmd = "\"C:/Program Files/Beyond Compare 4/BCompare.exe\" \"$LOCAL\" \"$REMOTE\""
 
 [merge]
-	tool = bc
+    tool = bc
 
 [mergetool]
     prompt = false
     keepBackup = false
 
 [mergetool "bc"]
-	cmd = "\"C:/Program Files/Beyond Compare 4/BCompare.exe\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\""
+    cmd = "\"C:/Program Files/Beyond Compare 4/BCompare.exe\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\""
 
 [alias]
     # branch
-	br = for-each-ref --sort=-committerdate --format=\"%(color:blue)%(authordate:relative)\t%(color:red)%(authorname)\t%(color:white)%(color:bold)%(refname:short)\" refs/remotes
+    br = for-each-ref --sort=-committerdate --format=\"%(color:blue)%(authordate:relative)\t%(color:red)%(authorname)\t%(color:white)%(color:bold)%(refname:short)\" refs/remotes
     del = branch -D
 
     # checkout
@@ -108,7 +108,7 @@
     s = status --short
 
     # log
-	lg = !git log --pretty=format:\"%C(magenta)%h%Creset -%C(red)%d%Creset %s %C(dim green)(%cr) [%an]\" --abbrev-commit -30
+    lg = !git log --pretty=format:\"%C(magenta)%h%Creset -%C(red)%d%Creset %s %C(dim green)(%cr) [%an]\" --abbrev-commit -30
 
 [url "git@github.com:"]
     insteadof = github:
