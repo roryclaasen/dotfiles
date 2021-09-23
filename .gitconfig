@@ -70,7 +70,7 @@
     prompt = false
 
 [difftool "bc4"]
-    cmd = "\"C:/Program Files/Beyond Compare 4/BCompare.exe\" \"$LOCAL\" \"$REMOTE\""
+    cmd = "\"C:/Program Files/Beyond Compare 4/bcomp.exe\" \"$LOCAL\" \"$REMOTE\""
 
 [merge]
     tool = bc
@@ -80,7 +80,7 @@
     keepBackup = false
 
 [mergetool "bc"]
-    cmd = "\"C:/Program Files/Beyond Compare 4/BCompare.exe\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\""
+    cmd = "\"C:/Program Files/Beyond Compare 4/bcomp.exe\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\""
 
 [alias]
     # branch
@@ -109,6 +109,9 @@
 
     # log
     lg = !git log --pretty=format:\"%C(magenta)%h%Creset -%C(red)%d%Creset %s %C(dim green)(%cr) [%an]\" --abbrev-commit -30
+
+    # Diff
+    diffdir = difftool --dir-diff
 
 [url "git@github.com:"]
     insteadof = github:
