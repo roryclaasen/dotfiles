@@ -56,9 +56,7 @@
 
 [credential]
     helper = manager-core
-
-[credential "https://dev.azure.com"]
-    useHttpPath = true
+	credentialStore = dpapi
 
 [diff]
     renames = copies
@@ -84,7 +82,8 @@
 
 [alias]
     # branch
-    br = for-each-ref --sort=-committerdate --format=\"%(color:blue)%(authordate:relative)\t%(color:red)%(authorname)\t%(color:white)%(color:bold)%(refname:short)\" refs/remotes
+    br = for-each-ref --sort=-committerdate --format=\"%(color:yellow)%(authordate:relative)\t%(color:red)%(authorname)\t%(color:white)%(color:bold)%(refname:short)\" refs/remotes
+    brl = branch --sort=-committerdate --format='%(color:yellow)%(authordate:relative)\t%(color:red)%(authorname)\t%(color:white)%(color:bold)%(refname:short)'
     del = branch -D
 
     # checkout
@@ -98,20 +97,24 @@
     p = push
     pa = push --all
     pt = push --tags
+    done = !git push origin HEAD
 
     # commit
     camend = commit --amend --reuse-message HEAD
     undo = reset HEAD~1 --mixed
     res = !git reset --hard
 
-    # index
-    s = status --short
-
     # log
+    s = status --short --branch
     lg = !git log --pretty=format:\"%C(magenta)%h%Creset -%C(red)%d%Creset %s %C(dim green)(%cr) [%an]\" --abbrev-commit -30
+    last = log -1 HEAD --stat
+    contrib = shortlog -e --summary --numbered
 
-    # Diff
+    # diff
     diffdir = difftool --dir-diff
+
+    # config
+    al = config --get-regexp alias
 
 [url "git@github.com:"]
     insteadof = github:

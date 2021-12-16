@@ -20,7 +20,7 @@ Thumbs.db
 .local
 .npm
 .npm-global
-.npmrc
+# .npmrc
 .nvm
 *.bak
 *.sass-cache
