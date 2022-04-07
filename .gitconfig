@@ -8,7 +8,8 @@
 
 [core]
     safecrlf = false
-    editor = 'C:/Program Files/Notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin
+    # editor = 'C:/Program Files/Notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin
+    editor = code --wait
     fscache = true
     excludesfile = ~/.gitignore_global
 
@@ -62,13 +63,16 @@
     renames = copies
     mnemonicprefix = true
     compactionHeuristic = true
-    tool = bc4
+    tool = code
 
 [difftool]
     prompt = false
 
 [difftool "bc4"]
     cmd = "\"C:/Program Files/Beyond Compare 4/bcomp.exe\" \"$LOCAL\" \"$REMOTE\""
+
+[difftool "code"]
+    cmd = code --wait --diff $LOCAL $REMOTE
 
 [merge]
     tool = bc
