@@ -57,7 +57,7 @@
 
 [credential]
     helper = manager-core
-	credentialStore = dpapi
+	# credentialStore = dpapi
 
 [diff]
     renames = copies
