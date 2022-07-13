@@ -46,6 +46,9 @@
     # set up 'git pull' to rebase instead of merge
     autosetuprebase = always
 
+[push]
+    autoSetupRemote = true
+
 [pull]
     rebase = true
 
@@ -109,6 +112,7 @@
     # commit
     c = commit
     cs = commit -S
+    cm = commit -m
     camend = commit --amend --reuse-message HEAD
     undo = reset HEAD~1 --mixed
     res = !git reset --hard
