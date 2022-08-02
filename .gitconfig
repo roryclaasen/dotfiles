@@ -113,14 +113,14 @@
     # commit
     c = commit
     cs = commit -S
-    cm = commit -m
+    cm = !git aa && git commit -m
     camend = commit --amend --reuse-message HEAD
     undo = reset HEAD~1 --mixed
     res = !git reset --hard
 
     # log
     s = status --short --branch
-    lg = !git log --pretty=format:\"%C(magenta)%h%Creset -%C(red)%d%Creset %s %C(dim green)(%cr) [%an]\" --abbrev-commit -30
+    lg = !git log --pretty=format:\"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- [%an]%C(reset)%C(bold yellow)%d%C(reset)\" --abbrev-commit -30
     last = log -1 HEAD --stat
     contrib = shortlog -e --summary --numbered
 
