@@ -5,7 +5,8 @@
     "foreground-misc": "#d8dee9",
     "block": "darkGray",
     "block-dir": "green",
-    "root": "lightYellow"
+    "root": "lightYellow",
+    "error": "red"
   },
   "blocks": [
     {
@@ -20,8 +21,18 @@
         {
           "foreground": "p:foreground",
           "style": "plain",
+          "type": "git",
+          "template": "<p:block>-[</>{{ .UpstreamIcon }} ",
+          "properties": {
+            "fetch_status": true,
+            "fetch_upstream_icon": true
+          }
+        },
+        {
+          "foreground": "p:foreground",
+          "style": "plain",
           "type": "poshgit",
-          "template": "<p:block>-</>{{ .Status }}"
+          "template": "{{ .Status }}"
         },
         {
           "foreground": "yellow",
@@ -34,6 +45,16 @@
           "style": "plain",
           "template": "<p:block>-[</>x{{ .Meaning }}<p:block>]</>",
           "type": "exit"
+        },
+        {
+          "foreground": "p:foreground",
+          "style": "diamond",
+          "template": "<p:block>-[</>\ufa1e{{ .FormattedMs }}<p:block>]</>",
+          "type": "executiontime",
+          "properties": {
+            "style": "roundrock",
+            "threshold": 0
+          }
         }
       ],
       "type": "prompt"
@@ -59,10 +80,14 @@
       "newline": true,
       "segments": [
         {
-          "foreground": "#5e81ac",
+          "foreground": "p:foreground",
+          "foreground_templates": ["{{ if gt .Code 0 }}p:error{{ end }}"],
+          "properties": {
+            "always_enabled": true
+          },
           "style": "plain",
-          "template": " \ue602 ",
-          "type": "text"
+          "template": "\ue285",
+          "type": "exit"
         }
       ],
       "type": "prompt"

@@ -2,6 +2,7 @@ Import-Module posh-git
 $env:POSH_GIT_ENABLED = $true
 
 if ((Get-Command "oh-my-posh")) {
+    $GitPromptSettings.BeforeStatus.Text = ""
     $GitPromptSettings.BeforeStatus.ForegroundColor = [ConsoleColor]::DarkGray
     $GitPromptSettings.DelimStatus.ForegroundColor = [ConsoleColor]::DarkGray
     $GitPromptSettings.AfterStatus.ForegroundColor = [ConsoleColor]::DarkGray
