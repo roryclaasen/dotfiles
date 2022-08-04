@@ -1,4 +1,4 @@
-function DFW_CREATE_SYMLINK {
+function DF_CREATE_SYMLINK {
     Param (
         [Parameter(Mandatory = $true)] [System.IO.FileSystemInfo] $File,
         [Parameter(Mandatory = $true)] [string] $TargetFolder
@@ -25,7 +25,7 @@ function DFW_CREATE_SYMLINK {
     }
 }
 
-function DFW_INSTALL_MODULE {
+function DF_INSTALL_MODULE {
     Param (
         [Parameter(Mandatory = $true)] [string] $Name
     )
@@ -40,7 +40,7 @@ function DFW_INSTALL_MODULE {
     }
 }
 
-function DFW_FETCH_LATEST {
+function DF_FETCH_LATEST {
     Write-Output "[+] Updating Repository..."
     try {
         Set-Location $PSScriptRoot;
@@ -51,67 +51,27 @@ function DFW_FETCH_LATEST {
     }
 }
 
-function DFW_SYMLINK_FILES {
+function DF_SYMLINK_FILES {
     Write-Output "[+] Setting up symlinks"
     Get-ChildItem -Path $PSScriptRoot -Exclude @(".git", ".editorconfig", "LICENSE", "setup.ps1") |
     ForEach-Object {
         if (!$_.PSisContainer) {
-            DFW_CREATE_SYMLINK -File $_ -TargetFolder $HOME
+            DF_CREATE_SYMLINK -File $_ -TargetFolder $HOME
         }
     }
 }
 
-function DFW_POWERSHELL_PROFILE {
+function DF_POWERSHELL_PROFILE {
     Write-Output "[+] Setting up Powershell Profile"
 
-    DFW_INSTALL_MODULE -Name posh-git
+    DF_INSTALL_MODULE -Name posh-git
 
     $targetFolder = Split-Path $PROFILE.CurrentUserAllHosts
     Get-ChildItem -Path "$PSScriptRoot/PowerShell" |
     ForEach-Object {
         if (!$_.PSisContainer) {
-            DFW_CREATE_SYMLINK -File $_ -TargetFolder $targetFolder
+            DF_CREATE_SYMLINK -File $_ -TargetFolder $targetFolder
         }
-    }
-}
-
-function DFW_INSTALL_PROGRAM {
-    Param (
-        [switch] $Required,
-        [switch] $Recomended,
-        [switch] $Work,
-        [switch] $Upgrade
-    )
-
-    if ($Upgrade) { Write-Output "[+] Upgrading programs" }
-    else { Write-Output "[+] Installing programs" }
-
-    try {
-        winget | Out-Null
-    }
-    catch [System.Management.Automation.CommandNotFoundException] {
-        Write-Error "Winget is not installed!"
-        return
-    }
-
-    $Programs = @();
-    if ($Required) {
-        # Not including "Microsoft.WindowsTerminal" as it causes an exit if the script is run on it
-        $programs += @("Git.Git", "Notepad++.Notepad++", "ScooterSoftware.BeyondCompare4", "OpenJS.NodeJS")
-    }
-
-    if ($Recomended) {
-        $programs += @("Microsoft.VisualStudioCode", "Microsoft.Powertoys", "VideoLAN.VLC", "WinDirStat.WinDirStat")
-    }
-
-    if ($Work) {
-        $programs += @("Perforce.P4V", "SlackTechnologies.Slack")
-    }
-
-    foreach ($program in $programs) {
-        Write-Output "Processing $program"
-        if ($Upgrade) { winget upgrade --id $program --silent }
-        else { winget install --id $program --silent }
     }
 }
 
@@ -132,14 +92,9 @@ function MAIN {
 
     while ($true) {
         write-output "0. Exit"
-        write-output "1. Setup Everything"
-        write-output "2. Fetch Latest"
-        write-output "3. Symlink Dotfiles"
-        write-output "4. PowerShell Profile"
-        write-output "5. Install Required Programs"
-        write-output "6. Install Recomended Programs"
-        write-output "7. Install Work Programs"
-        write-output "8. Upgrade All Programs"
+        write-output "1. Fetch Latest"
+        write-output "2. Symlink Dotfiles"
+        write-output "3. PowerShell Profile"
         write-output ""
 
         $a = Read-Host -prompt "[+] What do you want to do"
@@ -147,19 +102,9 @@ function MAIN {
 
         switch ($a) {
             "0" { EXIT }
-            "1" {
-                DFW_FETCH_LATEST
-                DFW_SYMLINK_FILES
-                DFW_POWERSHELL_PROFILE
-                DFW_INSTALL_PROGRAM -AllPrograms
-            }
-            "2" { DFW_FETCH_LATEST }
-            "3" { DFW_SYMLINK_FILES }
-            "4" { DFW_POWERSHELL_PROFILE }
-            "5" { DFW_INSTALL_PROGRAM -Required }
-            "6" { DFW_INSTALL_PROGRAM -Recomended }
-            "7" { DFW_INSTALL_PROGRAM -Work }
-            "8" { DFW_INSTALL_PROGRAM -Required -Recomended -Work -Upgrade }
+            "1" { DF_FETCH_LATEST }
+            "2" { DF_SYMLINK_FILES }
+            "3" { DF_POWERSHELL_PROFILE }
             default { }
         }
 

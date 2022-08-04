@@ -1,0 +1,73 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "palette": {
+    "foreground": "#88c0d0",
+    "foreground-misc": "#d8dee9",
+    "block": "darkGray",
+    "block-dir": "green",
+    "root": "lightYellow"
+  },
+  "blocks": [
+    {
+      "alignment": "left",
+      "segments": [
+        {
+          "foreground": "p:foreground",
+          "style": "plain",
+          "template": "<p:block>\u250f[</>{{ .UserName }}<p:block>]</>",
+          "type": "session"
+        },
+        {
+          "foreground": "p:foreground",
+          "style": "plain",
+          "type": "poshgit",
+          "template": "<p:block>-</>{{ .Status }}"
+        },
+        {
+          "foreground": "yellow",
+          "style": "plain",
+          "template": "<p:block>-[</>\uf0e7<p:block>]</>",
+          "type": "root"
+        },
+        {
+          "foreground": "p:foreground",
+          "style": "plain",
+          "template": "<p:block>-[</>x{{ .Meaning }}<p:block>]</>",
+          "type": "exit"
+        }
+      ],
+      "type": "prompt"
+    },
+    {
+      "alignment": "left",
+      "newline": true,
+      "segments": [
+        {
+          "foreground": "p:foreground",
+          "properties": {
+            "style": "full"
+          },
+          "style": "plain",
+          "template": "<p:block>\u2516[</>{{ .Path }}<p:block>]</>",
+          "type": "path"
+        }
+      ],
+      "type": "prompt"
+    },
+    {
+      "alignment": "left",
+      "newline": true,
+      "segments": [
+        {
+          "foreground": "#5e81ac",
+          "style": "plain",
+          "template": " \ue602 ",
+          "type": "text"
+        }
+      ],
+      "type": "prompt"
+    }
+  ],
+  "final_space": true,
+  "version": 2
+}
