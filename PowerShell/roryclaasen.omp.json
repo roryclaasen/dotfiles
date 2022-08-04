@@ -1,5 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "console_title_template": "{{.Folder}}{{if .Root}} :: root{{end}} :: {{.Shell}}",
   "palette": {
     "foreground": "#88c0d0",
     "foreground-misc": "#d8dee9",
@@ -21,18 +22,8 @@
         {
           "foreground": "p:foreground",
           "style": "plain",
-          "type": "git",
-          "template": "<p:block>-[</>{{ .UpstreamIcon }} ",
-          "properties": {
-            "fetch_status": true,
-            "fetch_upstream_icon": true
-          }
-        },
-        {
-          "foreground": "p:foreground",
-          "style": "plain",
           "type": "poshgit",
-          "template": "{{ .Status }}"
+          "template": "<p:block>-</>{{ .Status }}"
         },
         {
           "foreground": "yellow",
@@ -49,7 +40,7 @@
         {
           "foreground": "p:foreground",
           "style": "diamond",
-          "template": "<p:block>-[</>\ufa1e{{ .FormattedMs }}<p:block>]</>",
+          "template": "<p:block>-[</>\ufa1e {{ .FormattedMs }}<p:block>]</>",
           "type": "executiontime",
           "properties": {
             "style": "roundrock",
