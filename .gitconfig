@@ -81,7 +81,7 @@
     cmd = code --wait --diff $LOCAL $REMOTE
 
 [merge]
-    tool = bc4
+    tool = code
 
 [mergetool]
     prompt = false
@@ -90,6 +90,9 @@
 
 [mergetool "bc4"]
     cmd = "\"C:/Program Files/Beyond Compare 4/bcomp.exe\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\""
+
+[mergetool "code"]
+  cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
 
 [alias]
     # branch
