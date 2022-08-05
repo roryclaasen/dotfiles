@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
-  "console_title_template": "{{.Folder}}{{if .Root}} :: root{{end}} :: {{.Shell}}",
+  "console_title_template": "{{if .Root}}\u26a1 {{end}}{{.Folder}} - {{.Shell | replace \"pwsh\" \"Powershell\"}} {{.ShellVersion}}",
   "palette": {
     "foreground": "#88c0d0",
     "foreground-misc": "#d8dee9",
@@ -84,6 +84,13 @@
       "type": "prompt"
     }
   ],
+  "secondary_prompt": {
+    "foreground": "p:foreground",
+    "template": "\ue285"
+  },
+  "debug_prompt": {
+    "foreground": "p:foreground"
+  },
   "final_space": true,
   "version": 2
 }
