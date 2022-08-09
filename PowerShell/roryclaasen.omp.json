@@ -77,7 +77,7 @@
             "always_enabled": true
           },
           "style": "plain",
-          "template": "\ue285",
+          "template": "$",
           "type": "exit"
         }
       ],
@@ -86,7 +86,7 @@
   ],
   "secondary_prompt": {
     "foreground": "p:foreground",
-    "template": "\ue285"
+    "template": "> "
   },
   "debug_prompt": {
     "foreground": "p:foreground"
