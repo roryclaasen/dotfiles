@@ -22,8 +22,8 @@
         {
           "foreground": "p:foreground",
           "style": "plain",
-          "type": "poshgit",
-          "template": "<p:block>-</>{{ .Status }}"
+          "type": "text",
+          "template": "{{ if .Env.POSH_GIT_STRING }}<p:block>-</>{{ .Env.POSH_GIT_STRING }}{{ end }}"
         },
         {
           "foreground": "yellow",

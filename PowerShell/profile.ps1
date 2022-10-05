@@ -1,5 +1,4 @@
 Import-Module posh-git
-$env:POSH_GIT_ENABLED = $true
 
 if ((Get-Command "oh-my-posh")) {
     $GitPromptSettings.BeforeStatus.ForegroundColor = [ConsoleColor]::DarkGray
@@ -10,6 +9,20 @@ if ((Get-Command "oh-my-posh")) {
     if (Test-Path $PoshTheme) {
         oh-my-posh init pwsh --config $PoshTheme | Invoke-Expression
     }
+
+    function Set-PoshGitStatus {
+        $global:GitStatus = Get-GitStatus
+        if ($global:GitStatus) {
+            $env:POSH_GIT_STRING = (Write-GitStatus -Status $global:GitStatus).trim()
+        }
+        else {
+            $env:POSH_GIT_STRING = $null
+        }
+    }
+    New-Alias -Name 'Set-PoshContext' -Value 'Set-PoshGitStatus' -Scope Global -Force
+}
+else {
+    $env:POSH_GIT_ENABLED = $true
 }
 
 If ($host.Name -eq 'Visual Studio Code Host') {
