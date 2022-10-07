@@ -53,7 +53,7 @@ function DF_FETCH_LATEST {
 
 function DF_SYMLINK_FILES {
     Write-Output "[+] Setting up symlinks"
-    Get-ChildItem -Path $PSScriptRoot -Exclude @(".git", ".editorconfig", "LICENSE", "setup.ps1") |
+    Get-ChildItem -Path $PSScriptRoot -Exclude @(".git", ".gitignore", ".editorconfig", "LICENSE", "README.md", "setup.ps1") |
     ForEach-Object {
         if (!$_.PSisContainer) {
             DF_CREATE_SYMLINK -File $_ -TargetFolder $HOME

@@ -25,8 +25,14 @@ else {
     $env:POSH_GIT_ENABLED = $true
 }
 
-If ($host.Name -eq 'Visual Studio Code Host') {
+if ($host.Name -eq 'Visual Studio Code Host') {
     Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
+}
+
+
+$LocalProfile = Join-Path -Path $PSScriptRoot -ChildPath "local.profile.ps1"
+if (Test-path $LocalProfile) {
+    . $LocalProfile
 }
 
 function colors() {
