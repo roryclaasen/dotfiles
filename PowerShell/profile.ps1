@@ -2,9 +2,14 @@ if (Test-Path variable:global:RorysProfile) {
     break;
 }
 
-$global:RorysProfile = $True
+$global:RorysProfile = $true
 
-Import-Module posh-git
+$HasPoshGit = $false
+
+if (Get-Module -ListAvailable -Name posh-git) {
+    Import-Module posh-git
+    $HasPoshGit = $true
+}
 
 if ((Get-Command "oh-my-posh")) {
     $GitPromptSettings.BeforeStatus.ForegroundColor = [ConsoleColor]::DarkGray
@@ -16,44 +21,39 @@ if ((Get-Command "oh-my-posh")) {
         oh-my-posh init pwsh --config $PoshTheme | Invoke-Expression
     }
 
-    function Set-PoshGitStatus {
-        $global:GitStatus = Get-GitStatus
-        if ($global:GitStatus) {
-            $env:POSH_GIT_STRING = (Write-GitStatus -Status $global:GitStatus).trim()
+    if ($HasPoshGit) {
+        function Set-PoshGitStatus {
+            $global:GitStatus = Get-GitStatus
+            if ($global:GitStatus) {
+                $env:POSH_GIT_STRING = (Write-GitStatus -Status $global:GitStatus).trim()
+            }
+            else {
+                $env:POSH_GIT_STRING = $null
+            }
         }
-        else {
-            $env:POSH_GIT_STRING = $null
-        }
+
+        New-Alias -Name 'Set-PoshContext' -Value 'Set-PoshGitStatus' -Scope Global -Force
     }
-    New-Alias -Name 'Set-PoshContext' -Value 'Set-PoshGitStatus' -Scope Global -Force
 }
-else {
+elseif ($HasPoshGit) {
     $env:POSH_GIT_ENABLED = $true
 }
 
-if ($host.Name -eq 'Visual Studio Code Host') {
-    Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
-}
-
-
-$LocalProfile = Join-Path -Path $PSScriptRoot -ChildPath "local.profile.ps1"
-if (Test-path $LocalProfile) {
-    . $LocalProfile
-}
-
-function colors() {
-    # output all the colour combinations for text/background
-    # https://stackoverflow.com/questions/20541456/list-of-all-colors-available-for-powershell/41954792#41954792
-    $colors = [enum]::GetValues([System.ConsoleColor])
-    Foreach ($bgcolor in $colors) {
-        Foreach ($fgcolor in $colors) { Write-Host "$fgcolor|" -ForegroundColor $fgcolor -BackgroundColor $bgcolor -NoNewLine }
-        Write-Host " on $bgcolor"
+@('local.profile.ps1', 'utilities.ps1') | ForEach-Object {
+    $Script = Join-Path -Path $PSScriptRoot -ChildPath $_
+    if (Test-Path $Script) {
+        . $Script
     }
 }
 
 Try {
     $SudoModule = Get-Command gsudoModule.psd1
     Import-Module $SudoModule.Source
+    Set-Alias 'sudo' 'Invoke-gsudo'
 }
 Catch {
+}
+
+if ($host.Name -eq 'Visual Studio Code Host') {
+    Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
 }

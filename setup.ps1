@@ -31,28 +31,17 @@ function DF_INSTALL_MODULE {
     )
 
     if (Get-Module -ListAvailable -Name $Name) {
-        Write-Output "Module $Name already installed, updating..."
+        Write-Host "Module $Name already installed, updating..."
         PowerShellGet\Update-Module $Name
     }
     else {
-        Write-Output "Installing module $Name..."
+        Write-Host "Installing module $Name..."
         PowerShellGet\Install-Module $Name -Scope CurrentUser -Force
     }
 }
 
-function DF_FETCH_LATEST {
-    Write-Output "[+] Updating Repository..."
-    try {
-        Set-Location $PSScriptRoot;
-        git pull | Out-Null
-    }
-    catch [System.Management.Automation.CommandNotFoundException] {
-        Write-Error "Git not installed?"
-    }
-}
-
 function DF_SYMLINK_FILES {
-    Write-Output "[+] Setting up symlinks"
+    Write-Host "[+] Setting up symlinks"
     Get-ChildItem -Path $PSScriptRoot -Exclude @(".git", ".gitignore", ".editorconfig", "LICENSE", "README.md", "setup.ps1") |
     ForEach-Object {
         if (!$_.PSisContainer) {
@@ -62,27 +51,33 @@ function DF_SYMLINK_FILES {
 }
 
 function DF_POWERSHELL_PROFILE {
-    Write-Output "[+] Setting up Powershell Profile"
-
-    DF_INSTALL_MODULE -Name posh-git
+    Write-Host "[+] Setting up Powershell Profile"
 
     $targetFolder = Split-Path $PROFILE.CurrentUserAllHosts
-    Get-ChildItem -Path "$PSScriptRoot/PowerShell" |
-    ForEach-Object {
-        if (!$_.PSisContainer) {
-            DF_CREATE_SYMLINK -File $_ -TargetFolder $targetFolder
-        }
+
+    if (Test-Path $targetFolder) {
+        Write-Host "Profile already exists, unable to link from dotfiles"
+    } else {
+        Write-Host "Creating profile folder"
+        $sourcePath = Join-Path -Path $PSScriptRoot -ChildPath "PowerShell"
+
+        New-Item -Type Junction -Path $targetFolder -Target $sourcePath | Out-Null
+    }
+
+    $PoshGitDecision = $Host.UI.PromptForChoice("Posh-Git", "Do you want to install or update Posh-Git?", @("&Yes", "&No"), 0)
+    if ($PoshGitDecision -eq 0) {
+        DF_INSTALL_MODULE -Name posh-git
     }
 }
 
 function MAIN {
-    write-output ""
-    Write-Output "      _       _         __ _ _"
-    Write-Output "   __| | ___ | |_      / _(_) | ___  ___"
-    Write-Output "  / _\` |/ _ \| __|____| |_| | |/ _ \/ __|"
-    Write-Output " | (_| | (_) | ||_____|  _| | |  __/\__ \\"
-    Write-Output "  \__,_|\___/ \__|    |_| |_|_|\___||___/"
-    Write-Output ""
+    Write-Host ""
+    Write-Host "      _       _         __ _ _"
+    Write-Host "   __| | ___ | |_      / _(_) | ___  ___"
+    Write-Host "  / _\` |/ _ \| __|____| |_| | |/ _ \/ __|"
+    Write-Host " | (_| | (_) | ||_____|  _| | |  __/\__ \\"
+    Write-Host "  \__,_|\___/ \__|    |_| |_|_|\___||___/"
+    Write-Host ""
 
     If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
         Write-Warning "You do not have Administrator rights to run this script!"
@@ -91,24 +86,22 @@ function MAIN {
     }
 
     while ($true) {
-        write-output "0. Exit"
-        write-output "1. Fetch Latest"
-        write-output "2. Symlink Dotfiles"
-        write-output "3. PowerShell Profile"
-        write-output ""
+        Write-Host "0. Exit"
+        Write-Host "1. Symlink Dotfiles"
+        Write-Host "2. PowerShell Profile"
+        Write-Host ""
 
         $a = Read-Host -prompt "[+] What do you want to do"
-        Write-Output ""
+        Write-Host ""
 
         switch ($a) {
             "0" { EXIT }
-            "1" { DF_FETCH_LATEST }
-            "2" { DF_SYMLINK_FILES }
-            "3" { DF_POWERSHELL_PROFILE }
+            "1" { DF_SYMLINK_FILES }
+            "2" { DF_POWERSHELL_PROFILE }
             default { }
         }
 
-        Write-Output ""
+        Write-Host ""
     }
 }
 
