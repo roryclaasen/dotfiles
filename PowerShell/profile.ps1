@@ -1,3 +1,9 @@
+if (Test-Path variable:global:RorysProfile) {
+    break;
+}
+
+$global:RorysProfile = $True
+
 Import-Module posh-git
 
 if ((Get-Command "oh-my-posh")) {
@@ -43,4 +49,11 @@ function colors() {
         Foreach ($fgcolor in $colors) { Write-Host "$fgcolor|" -ForegroundColor $fgcolor -BackgroundColor $bgcolor -NoNewLine }
         Write-Host " on $bgcolor"
     }
+}
+
+Try {
+    $SudoModule = Get-Command gsudoModule.psd1
+    Import-Module $SudoModule.Source
+}
+Catch {
 }
