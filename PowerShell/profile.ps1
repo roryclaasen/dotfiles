@@ -47,9 +47,8 @@ elseif ($HasPoshGit) {
 }
 
 Try {
-    $SudoModule = Get-Command gsudoModule.psd1
-    Import-Module $SudoModule.Source
-    Set-Alias 'sudo' 'Invoke-gsudo'
+    Import-Module (Get-Command gsudoModule.psd1).Source
+    Set-Alias 'sudo' 'gsudo'
 }
 Catch {
 }
