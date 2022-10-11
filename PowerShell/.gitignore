@@ -2,10 +2,11 @@
 *
 
 # Powershell Scripts
-!Microsoft.PowerShell_profile.ps1
 !profile.ps1
 
+!terminal.ps1
 !utilities.ps1
+!sandbox.ps1
 
 # Config Files
 !.gitignore
