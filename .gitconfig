@@ -13,6 +13,7 @@
     fscache = true
     fsmonitor = true
     excludesfile = ~/.gitignore_global
+    symlinks = true
 
 [color]
     diff = auto
