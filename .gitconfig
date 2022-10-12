@@ -75,7 +75,7 @@
     keepBackup = false
 
 [difftool "bc4"]
-    cmd = "\"C:/Program Files/Beyond Compare 4/bcomp.exe\" \"$LOCAL\" \"$REMOTE\""
+    cmd = 'C:\\Program Files\\Beyond Compare 4\\bcomp.exe\\' "$LOCAL" "$REMOTE"
 
 [difftool "code"]
     cmd = code --wait --diff $LOCAL $REMOTE
@@ -89,10 +89,14 @@
     keepBackup = false
 
 [mergetool "bc4"]
-    cmd = "\"C:/Program Files/Beyond Compare 4/bcomp.exe\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\""
+    cmd = 'C:\\Program Files\\Beyond Compare 4\\bcomp.exe\\' "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
 
 [mergetool "code"]
   cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
+
+[mergetool "unityyamlmerge"]
+    trustExitCode = false
+    cmd = 'C:\\Program Files\\Unity\\Hub\\Editor\\2019.2.11f1\\Editor\\Data\\Tools\\UnityYAMLMerge.exe' merge -p "$BASE" "$REMOTE" "$LOCAL" "$MERGED"
 
 [alias]
     # branch
