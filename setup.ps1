@@ -21,7 +21,7 @@ function InstallModule {
 
 function SetupDotfiles {
     Write-Host "[+] Setting up dotfiles..."
-    Get-ChildItem -Path $PSScriptRoot -Exclude @(".gitignore", ".editorconfig", "LICENSE", "README.md", "setup.ps1", "install.sh")
+    Get-ChildItem -Path $PSScriptRoot -Exclude @(".gitignore", ".editorconfig", "LICENSE", "README.md", "setup.ps1")
     | Where-Object { -not $_.PSisContainer }
     | ForEach-Object {
         $Path = Join-Path -Path $HOME -ChildPath $_.Name
