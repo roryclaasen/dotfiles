@@ -31,7 +31,8 @@ function SetupDotfiles {
             if (-not (Get-ItemProperty $Path).LinkType) {
                 Write-Warn "File '$Path' already exists and is not a symlink! Move or Remove it to prevent data loss!"
             }
-        }else {
+        }
+        else {
             New-Item -ItemType SymbolicLink -Path $Path -Target $Target | Out-Null
         }
     }
@@ -59,5 +60,11 @@ function SetupPowerShell {
     }
 }
 
+function SetupSudo {
+    # TODO - Check if sudo is installed
+    gsudo config PowerShellLoadProfile true
+}
+
 SetupDotfiles
 SetupPowerShell
+SetupSudo
