@@ -61,7 +61,7 @@
     fetchjobs = 8
 
 [credential]
-    helper = manager-core
+    helper = manager
     credentialStore = dpapi
 
 [diff]
