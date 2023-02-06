@@ -125,7 +125,9 @@
     # commit
     c = commit
     cs = commit -S
-    cm = !git aa && git commit -m
+    cm = commit -m
+    acm = !git aa && git commit -m
+    cma = !git aa && git commit -m
     camend = commit --amend --reuse-message HEAD
     undo = reset HEAD~1 --mixed
     res = !git reset --hard
