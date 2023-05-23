@@ -14,38 +14,56 @@
       "alignment": "left",
       "segments": [
         {
-          "foreground": "p:foreground",
           "style": "plain",
-          "template": "<p:block>\u250f[</>{{ .UserName }}<p:block>]</>",
-          "type": "session"
+          "type": "session",
+          "foreground": "p:foreground",
+          "template": "<p:block>\u250f[</>{{ .UserName }}<p:block>]</>"
         },
         {
-          "foreground": "p:foreground",
           "style": "plain",
           "type": "text",
+          "foreground": "p:foreground",
           "template": "{{ if .Env.POSH_GIT_STRING }}<p:block>-</>{{ .Env.POSH_GIT_STRING }}{{ end }}"
         },
         {
+          "style": "plain",
+          "type": "root",
           "foreground": "yellow",
-          "style": "plain",
-          "template": "<p:block>-[</>\uf0e7<p:block>]</>",
-          "type": "root"
+          "template": "<p:block>-[</>\uf0e7<p:block>]</>"
         },
         {
-          "foreground": "p:foreground",
           "style": "plain",
-          "template": "<p:block>-[</>x{{ .Meaning }}<p:block>]</>",
-          "type": "exit"
+          "type": "exit",
+          "foreground": "p:foreground",
+          "template": "<p:block>-[</>x{{ .Meaning }}<p:block>]</>"
         },
         {
-          "foreground": "p:foreground",
-          "style": "diamond",
-          "template": "<p:block>-[</>\ufa1e {{ .FormattedMs }}<p:block>]</>",
+          "style": "plain",
           "type": "executiontime",
+          "foreground": "p:foreground",
+          "template": "<p:block>-[</>\ufa1e {{ .FormattedMs }}<p:block>]</>",
           "properties": {
             "style": "roundrock",
             "threshold": 0
           }
+        },
+        {
+          "style": "plain",
+          "type": "dotnet",
+          "foreground": "p:foreground",
+          "template": "<p:block>-[</>\ue77f {{ .Full }}<p:block>]</>"
+        },
+        {
+          "style": "plain",
+          "type": "docker",
+          "foreground": "p:foreground",
+          "template": "<p:block>-[</>\ue650 {{ .Context }}<p:block>]</>"
+        },
+        {
+          "style": "plain",
+          "type": "upgrade",
+          "foreground": "yellow",
+          "template": "<p:block>-[</>\udb82\ude0a {{ .Version }}<p:block>]</>"
         }
       ],
       "type": "prompt"
