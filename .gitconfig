@@ -129,10 +129,12 @@
     acm = !git aa && git commit -m
     cma = !git aa && git commit -m
     camend = commit --amend --reuse-message HEAD
-    undo = reset HEAD~1 --mixed
-    res = !git reset --hard
     lch = log -n 1 --pretty=format:'%H'
 	missing = "!f() { git cherry ${1} ${2} --verbose --abbrev=10 | grep "+ "; }; f"
+
+    cl = clean -xdf -e .vscode
+    undo = reset HEAD~1 --mixed
+    res = !git reset --hard
 
     # log
     s = status --short --branch
