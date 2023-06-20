@@ -1,105 +1,101 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
-  "console_title_template": "{{if .Root}}\u26a1 {{end}}{{.Folder}} - {{.Shell | replace \"pwsh\" \"Powershell\"}} {{.ShellVersion}}",
-  "palette": {
-    "foreground": "#88c0d0",
-    "foreground-misc": "#d8dee9",
-    "block": "darkGray",
-    "block-dir": "green",
-    "root": "lightYellow",
-    "error": "red"
-  },
+  "version": 2,
+  "final_space": true,
+  "console_title_template": "{{if .Root}}⚡ {{end}}{{.Folder}} - {{.Shell | replace \"pwsh\" \"Powershell\"}} {{.ShellVersion}}",
   "blocks": [
     {
+      "type": "prompt",
       "alignment": "left",
       "segments": [
         {
-          "style": "plain",
           "type": "session",
+          "style": "plain",
           "foreground": "p:foreground",
           "template": "<p:block>\u250f[</>{{ .UserName }}<p:block>]</>"
         },
         {
-          "style": "plain",
           "type": "text",
+          "style": "plain",
           "foreground": "p:foreground",
           "template": "{{ if .Env.POSH_GIT_STRING }}<p:block>-</>{{ .Env.POSH_GIT_STRING }}{{ end }}"
         },
         {
-          "style": "plain",
           "type": "root",
+          "style": "plain",
           "foreground": "yellow",
           "template": "<p:block>-[</>\uf0e7<p:block>]</>"
         },
         {
-          "style": "plain",
           "type": "exit",
+          "style": "plain",
           "foreground": "p:foreground",
           "template": "<p:block>-[</>x{{ .Meaning }}<p:block>]</>"
         },
         {
-          "style": "plain",
           "type": "executiontime",
+          "style": "plain",
           "foreground": "p:foreground",
-          "template": "<p:block>-[</>\ufa1e {{ .FormattedMs }}<p:block>]</>",
+          "template": "<p:block>-[</>\udb81\udd1b {{ .FormattedMs }}<p:block>]</>",
           "properties": {
             "style": "roundrock",
             "threshold": 0
           }
         },
         {
-          "style": "plain",
           "type": "dotnet",
+          "style": "plain",
           "foreground": "p:foreground",
           "template": "<p:block>-[</>\ue77f {{ .Full }}<p:block>]</>"
         },
         {
-          "style": "plain",
           "type": "docker",
+          "style": "plain",
           "foreground": "p:foreground",
           "template": "<p:block>-[</>\ue650 {{ .Context }}<p:block>]</>"
         },
         {
-          "style": "plain",
           "type": "upgrade",
+          "style": "plain",
           "foreground": "yellow",
           "template": "<p:block>-[</>\udb82\ude0a {{ .Version }}<p:block>]</>"
         }
-      ],
-      "type": "prompt"
+      ]
     },
     {
+      "type": "prompt",
       "alignment": "left",
-      "newline": true,
       "segments": [
         {
+          "type": "path",
+          "style": "plain",
           "foreground": "p:foreground",
+          "template": "<p:block>\u2516[</>{{ .Path }}<p:block>]</>",
           "properties": {
             "style": "full"
-          },
-          "style": "plain",
-          "template": "<p:block>\u2516[</>{{ .Path }}<p:block>]</>",
-          "type": "path"
+          }
         }
       ],
-      "type": "prompt"
+      "newline": true
     },
     {
+      "type": "prompt",
       "alignment": "left",
-      "newline": true,
       "segments": [
         {
+          "type": "exit",
+          "style": "plain",
           "foreground": "p:foreground",
-          "foreground_templates": ["{{ if gt .Code 0 }}p:error{{ end }}"],
+          "foreground_templates": [
+            "{{ if gt .Code 0 }}p:error{{ end }}"
+          ],
+          "template": "$",
           "properties": {
             "always_enabled": true
-          },
-          "style": "plain",
-          "template": "$",
-          "type": "exit"
+          }
         }
       ],
-      "type": "prompt"
+      "newline": true
     }
   ],
   "secondary_prompt": {
@@ -109,6 +105,12 @@
   "debug_prompt": {
     "foreground": "p:foreground"
   },
-  "final_space": true,
-  "version": 2
+  "palette": {
+    "block": "darkGray",
+    "block-dir": "green",
+    "error": "red",
+    "foreground": "#88c0d0",
+    "foreground-misc": "#d8dee9",
+    "root": "lightYellow"
+  }
 }
