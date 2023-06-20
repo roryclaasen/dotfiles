@@ -9,13 +9,16 @@ function InstallModule {
         [Parameter(Mandatory = $true)] [string] $Name
     )
 
-    if (Get-Module -ListAvailable -Name $Name) {
-        Write-Host "Module $Name already installed, updating..."
-        PowerShellGet\Update-Module $Name
-    }
-    else {
-        Write-Host "Installing module $Name..."
-        PowerShellGet\Install-Module $Name -Scope CurrentUser -Force
+    $Decision = $Host.UI.PromptForChoice("$Name Installation", "Do you want to install or update $Name?", @("&Yes", "&No"), 0)
+    if ($Decision -eq 0) {
+        if (Get-Module -ListAvailable -Name $Name) {
+            Write-Host "Module $Name already installed, updating..."
+            PowerShellGet\Update-Module $Name
+        }
+        else {
+            Write-Host "Installing module $Name..."
+            PowerShellGet\Install-Module $Name -Scope CurrentUser -Force
+        }
     }
 }
 
@@ -54,10 +57,8 @@ function SetupPowerShell {
         New-Item -Type Junction -Path $targetFolder -Target $sourcePath | Out-Null
     }
 
-    $PoshGitDecision = $Host.UI.PromptForChoice("Posh-Git Installation", "Do you want to install or update Posh-Git?", @("&Yes", "&No"), 0)
-    if ($PoshGitDecision -eq 0) {
-        InstallModule -Name posh-git
-    }
+    InstallModule -Name posh-git
+    InstallModule -Name Terminal-Icons
 }
 
 function SetupSudo {

@@ -5,6 +5,10 @@ if (Get-Module -ListAvailable -Name posh-git) {
     $HasPoshGit = $true
 }
 
+if (Get-Module -ListAvailable -Name Terminal-Icons) {
+    Import-Module Terminal-Icons
+}
+
 if ((Get-Command "oh-my-posh")) {
     $GitPromptSettings.BeforeStatus.ForegroundColor = [ConsoleColor]::DarkGray
     $GitPromptSettings.DelimStatus.ForegroundColor = [ConsoleColor]::DarkGray
