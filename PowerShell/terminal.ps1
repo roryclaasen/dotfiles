@@ -13,6 +13,7 @@ if ((Get-Command "oh-my-posh")) {
     $GitPromptSettings.BeforeStatus.ForegroundColor = [ConsoleColor]::DarkGray
     $GitPromptSettings.DelimStatus.ForegroundColor = [ConsoleColor]::DarkGray
     $GitPromptSettings.AfterStatus.ForegroundColor = [ConsoleColor]::DarkGray
+    $GitPromptSettings.BeforeStatus.Text = [string]::Empty;
 
     $PoshTheme = Join-Path -Path $PSScriptRoot -ChildPath "roryclaasen.omp.json"
     if (Test-Path $PoshTheme) {
