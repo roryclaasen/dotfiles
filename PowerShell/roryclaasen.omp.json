@@ -21,18 +21,12 @@
           "templates": [
             "{{ if .Env.POSH_GIT_STRING }}",
             "<p:block>-[</>",
-            "{{ .UpstreamIcon }} ",
+            "{{ .UpstreamIcon }} {{ .Env.POSH_GIT_STRING }}",
             "{{ end }}"
           ],
           "properties": {
             "fetch_upstream_icon": true
           }
-        },
-        {
-          "type": "text",
-          "style": "plain",
-          "foreground": "p:foreground",
-          "template": "{{ if .Env.POSH_GIT_STRING }}{{ .Env.POSH_GIT_STRING }}{{ end }}"
         },
         {
           "type": "root",
