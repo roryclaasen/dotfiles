@@ -9,7 +9,7 @@ $global:RorysProfile = $true
 . (Join-Path $PSScriptRoot "sandbox.ps1")
 
 Try {
-    Import-Module (Get-Command gsudoModule.psd1).Source
+    Import-Module gsudoModule
     Set-Alias 'sudo' 'gsudo'
 }
 Catch {
