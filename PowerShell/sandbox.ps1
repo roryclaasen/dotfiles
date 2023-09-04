@@ -18,6 +18,23 @@ function Get-SavedSandboxConfig {
     return $DefaultTable
 }
 
+function Get-XblPCSandbox {
+    $ExePath = Get-Command XblPCSandbox.exe -ErrorAction SilentlyContinue
+    if ($ExePath) {
+        return $ExePath.Source
+    }
+
+    $GDKPath = $env:GameDK
+    if (-not [string]::IsNullOrWhiteSpace($GDKPath)) {
+        $ExePath = Join-Path $GDKPath "bin\XblPCSandbox.exe"
+        if (Test-Path $ExePath) {
+            return $ExePath
+        }
+    }
+
+    throw "Unable to find XblPCSandbox.exe"
+}
+
 function Get-Sandbox {
     [CmdletBinding()]
     param(
@@ -26,11 +43,22 @@ function Get-Sandbox {
     )
 
     if ([string]::IsNullOrWhiteSpace($Sandbox)) {
-        $XboxLive = Get-ItemProperty -Path hklm:\software\microsoft\XboxLive
-        if ($XboxLive.Sandbox) {
-            return $XboxLive.Sandbox
+        try {
+            $XblPCSandbox = Get-XblPCSandbox
+            $Sandbox = (& $XblPCSandbox "/get") | Select-String -Pattern "Sandbox: (.*)" | ForEach-Object { $_.Matches.Groups[1].Value }
+            if ([string]::IsNullOrWhiteSpace($Sandbox)) {
+                throw "Unable to get sandbox from XblPCSandbox.exe"
+            }
+            return $Sandbox
         }
-        return 'Retail'
+        catch {
+            $XboxLive = Get-ItemProperty -Path hklm:\software\microsoft\XboxLive
+            if ($XboxLive.Sandbox) {
+                return $XboxLive.Sandbox
+            }
+        }
+
+        return "RETAIL"
     }
     else {
         $SandboxMap = Get-SavedSandboxConfig -IncludeRetail $false
@@ -67,31 +95,37 @@ function Set-Sandbox {
         break;
     }
 
-    if ($NewSandbox -eq "Retail") {
-        Write-Host "Setting Sandbox to Retail"
-        Remove-ItemProperty -Path hklm:\software\microsoft\XboxLive -Name Sandbox
+    try {
+        $XblPCSandbox = Get-XblPCSandbox
+        & $XblPCSandbox $NewSandbox
     }
-    else {
+    catch {
         Write-Host "Setting Sandbox to $NewSandbox"
-        Set-ItemProperty -Path hklm:\software\microsoft\XboxLive -Name Sandbox -Value $NewSandbox
-    }
-
-    function Restart-Service {
-        param(
-            [Parameter(Mandatory = $true)]
-            [string]$ServiceName
-        )
-
-        Write-Host "Restarting $ServiceName"
-        $service = Get-Service -Name $ServiceName
-        if ($service.Status -eq 'Running') {
-            $service | Stop-Service
+        if ($NewSandbox -ieq "RETAIL") {
+            Remove-ItemProperty -Path hklm:\software\microsoft\XboxLive -Name Sandbox
         }
-        $service | Start-Service
-    }
+        else {
+            Set-ItemProperty -Path hklm:\software\microsoft\XboxLive -Name Sandbox -Value $NewSandbox
+        }
 
-    Restart-Service XblAuthManager
-    Restart-Service DiagTrack
+        function Restart-Service {
+            param(
+                [Parameter(Mandatory = $true)]
+                [string]$ServiceName
+            )
+
+            Write-Host "Restarting $ServiceName"
+            $service = Get-Service -Name $ServiceName
+            if ($service.Status -eq 'Running') {
+                $service | Stop-Service
+            }
+            $service | Start-Service
+        }
+
+        Restart-Service XblAuthManager
+        Restart-Service DiagTrack
+        Restart-Service GamingServices
+    }
 }
 
 Register-ArgumentCompleter -CommandName Get-Sandbox -ParameterName Sandbox -ScriptBlock {
