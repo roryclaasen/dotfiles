@@ -7,7 +7,7 @@ function Get-SavedSandboxConfig {
 
     $DefaultTable = @{}
     if ($IncludeRetail) {
-        $DefaultTable += @{ "Retail" = "Retail" };
+        $DefaultTable += @{ "Retail" = "RETAIL" };
     }
 
     $JsonFile = Join-Path $PSScriptRoot "Sandboxes.json"
@@ -18,7 +18,7 @@ function Get-SavedSandboxConfig {
     return $DefaultTable
 }
 
-function Get-XblPCSandbox {
+function Get-XblPCSandboxCommand {
     $ExePath = Get-Command XblPCSandbox.exe -ErrorAction SilentlyContinue
     if ($ExePath) {
         return $ExePath.Source
@@ -51,13 +51,13 @@ function Get-XblPCSandbox {
 function Get-Sandbox {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $false, HelpMessage = "The sandbox to get to.")]
+        [Parameter(Mandatory = $false, HelpMessage = "If provided, the sandbox to fetch from the saved config.")]
         [string]$Sandbox
     )
 
     if ([string]::IsNullOrWhiteSpace($Sandbox)) {
         try {
-            $XblPCSandbox = Get-XblPCSandbox
+            $XblPCSandbox = Get-XblPCSandboxCommand
             $Sandbox = (& $XblPCSandbox "/get") | Select-String -Pattern "Sandbox: (.*)" | ForEach-Object { $_.Matches.Groups[1].Value }
             if ([string]::IsNullOrWhiteSpace($Sandbox)) {
                 throw "Unable to get sandbox from XblPCSandbox.exe"
@@ -86,7 +86,7 @@ function Get-Sandbox {
 function Set-Sandbox {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true, HelpMessage = "The sandbox to set to.")]
+        [Parameter(Mandatory = $true, HelpMessage = "The sandbox to switch to.")]
         [string]$Sandbox
     )
 
@@ -109,11 +109,11 @@ function Set-Sandbox {
     }
 
     try {
-        $XblPCSandbox = Get-XblPCSandbox
+        $XblPCSandbox = Get-XblPCSandboxCommand
         & $XblPCSandbox $NewSandbox
     }
     catch {
-        Write-Host "Setting Sandbox to $NewSandbox"
+        Write-Host "Switching to Sandbox $NewSandbox"
         if ($NewSandbox -ieq "RETAIL") {
             Remove-ItemProperty -Path hklm:\software\microsoft\XboxLive -Name Sandbox
         }
@@ -127,11 +127,12 @@ function Set-Sandbox {
                 [string]$ServiceName
             )
 
-            Write-Host "Restarting $ServiceName"
             $service = Get-Service -Name $ServiceName
             if ($service.Status -eq 'Running') {
+                Write-Host "Stopping $ServiceName"
                 $service | Stop-Service
             }
+            Write-Host "Starting $ServiceName"
             $service | Start-Service
         }
 
