@@ -36,3 +36,11 @@ if ((Get-Command "oh-my-posh")) {
 elseif ($HasPoshGit) {
     $env:POSH_GIT_ENABLED = $true
 }
+
+if (Get-Module -ListAvailable -Name PSFzf) {
+    Import-Module PSFzf -ArgumentList 'Ctrl+t', 'Ctrl+r'
+}
+
+if (Get-Module -ListAvailable -Name z) {
+    Import-Module z
+}
