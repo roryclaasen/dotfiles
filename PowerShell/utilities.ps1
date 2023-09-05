@@ -8,7 +8,7 @@ function colors() {
     }
 }
 
-function Check-LineEndings {
+function Get-LineEndings {
     param(
         [Parameter(Mandatory = $false)]
         [string]$Directory = $PWD
@@ -32,12 +32,12 @@ function Check-LineEndings {
             }
         }
         catch {
-            Write-Warning "Unable to check line endings for $($file.FullName)"
+            Write-Warning "Unable to get line endings for $($file.FullName)"
             return "Unknown"
         }
     }
 
-    Write-Host "Checking line endings for files in $Directory"
+    Write-Host "Getting line endings for files in $Directory"
 
     $exclude = '\.git|\.vs|node_modules|packages|bin|obj|png|jpg|jpeg|gif|avif|webp|ico|ttf|woff|woff2|eot|svg|zip|rar|7z|gz|tar|bz2|exe|dll|pdb|bak|tmp|cache'
     $output = @()
