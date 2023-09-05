@@ -32,6 +32,19 @@ function Get-XblPCSandbox {
         }
     }
 
+    try {
+        $GDKInstallRoots = Get-ItemProperty -Path 'hklm:\software\microsoft\GDK\Installed Roots'
+        $GDKPath = $GDKInstallRoots.GDKInstallPath
+        if (-not [string]::IsNullOrWhiteSpace($GDKPath)) {
+            $ExePath = Join-Path $GDKPath "bin\XblPCSandbox.exe"
+            if (Test-Path $ExePath) {
+                return $ExePath
+            }
+        }
+    }
+    catch {
+    }
+
     throw "Unable to find XblPCSandbox.exe"
 }
 
