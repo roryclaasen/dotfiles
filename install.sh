@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 echo "it ran" > ~/foo.txt
 
 # If PowerShell isn't installed, install PowerShell
