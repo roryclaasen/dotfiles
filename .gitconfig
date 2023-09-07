@@ -48,6 +48,9 @@
     # set up 'git pull' to rebase instead of merge
     autosetuprebase = always
 
+[fetch]
+  prune = true
+
 [push]
     autoSetupRemote = true
 
