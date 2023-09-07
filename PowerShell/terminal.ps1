@@ -37,7 +37,7 @@ elseif ($HasPoshGit) {
     $env:POSH_GIT_ENABLED = $true
 }
 
-if (Get-Module -ListAvailable -Name PSFzf) {
+if ((Get-Module -ListAvailable -Name PSFzf) -And (Get-Command "Fzf.exe" -ErrorAction SilentlyContinue)) {
     Import-Module PSFzf -ArgumentList 'Ctrl+t', 'Ctrl+r'
 }
 
