@@ -53,3 +53,22 @@ function Get-LineEndings {
 
     Write-Output $output
 }
+
+function Set-FilesWriteable
+{
+    param(
+        [Parameter(Mandatory = $false)]
+        [string]$Directory = $PWD,
+        [Parameter(Mandatory = $false)]
+        [switch]$Recurse
+    )
+    $output = @()
+
+    $files = Get-ChildItem -Path $Directory -File -Recurse:$Recurse.IsPresent | Where-Object { $_.IsReadOnly -eq $true }
+    $files | ForEach-Object {
+        Set-ItemProperty $_ -Name IsReadOnly -Value $false
+        $output += $_
+    }
+
+    Write-Output $output
+}
