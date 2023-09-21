@@ -11,7 +11,9 @@ function colors() {
 function Get-LineEndings {
     param(
         [Parameter(Mandatory = $false)]
-        [string]$Directory = $PWD
+        [string]$Directory = $PWD,
+        [Parameter(Mandatory = $false)]
+        [switch]$Recurse
     )
 
     function Get-LineTypeForFile($file) {
@@ -42,7 +44,7 @@ function Get-LineEndings {
     $exclude = '\.git|\.vs|node_modules|packages|bin|obj|png|jpg|jpeg|gif|avif|webp|ico|ttf|woff|woff2|eot|svg|zip|rar|7z|gz|tar|bz2|exe|dll|pdb|bak|tmp|cache'
     $output = @()
 
-    $files = Get-ChildItem -Path $Directory -Recurse -File | Where-Object { $_.FullName -notMatch $exclude }
+    $files = Get-ChildItem -Path $Directory -Recurse:$Recurse.IsPresent -File | Where-Object { $_.FullName -notMatch $exclude }
     $files | ForEach-Object {
         $file = $_
         $output += [PSCustomObject]@{
