@@ -24,6 +24,7 @@ function Install-WinGetTools {
 function Install-PSRequirements {
     Write-Host "[+] Installing PowerShell Requirements..."
 
+    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
     Install-Module PowerShellGet -Force -AllowClobber
 
     $Requirements = @(
