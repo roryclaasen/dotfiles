@@ -20,19 +20,6 @@
         "Name": "winget",
         "Type": "Microsoft.PreIndexed.Package"
       }
-    },
-    {
-      "Packages": [
-        {
-          "PackageIdentifier": "XP9CDQW6ML4NQN"
-        }
-      ],
-      "SourceDetails": {
-        "Argument": "https://storeedgefd.dsx.mp.microsoft.com/v9.0",
-        "Identifier": "StoreEdgeFD",
-        "Name": "msstore",
-        "Type": "Microsoft.Rest"
-      }
     }
   ],
   "WinGetVersion": "1.7.2782-preview"
