@@ -1,8 +1,30 @@
 $IsCodespace = $env:CODESPACES -eq $true
 
+function Install-WinGetTools {
+    if (-not (Get-Command "winget" -ErrorAction SilentlyContinue)) {
+        Write-Warning "[+] Windows Package Manager not installed. Skipping..."
+        break;
+    }
+
+    Write-Host "[+] Importing Windows Package Manager config..."
+    $fileConfig = Join-Path -Path $PSScriptRoot -ChildPath "winget.json"
+
+    $wingetImportOptions = @(
+        $fileConfig,
+        '--ignore-unavailable',
+        '--disable-interactivity',
+        '--accept-package-agreements',
+        '--accept-source-agreements'
+        '--no-upgrade'
+    )
+
+    winget import $wingetImportOptions
+}
+
 function Install-PSRequirements {
     Write-Host "[+] Installing PowerShell Requirements..."
 
+    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
     Install-Module PowerShellGet -Force -AllowClobber
 
     $Requirements = @(
@@ -90,16 +112,21 @@ function Install-GSudo {
         break;
     }
 
+    if (-not (Get-Command "gsudo" -ErrorAction SilentlyContinue)) {
+        Write-Warning "[+] Gsudo not installed. Skipping..."
+        break;
+    }
+
     Write-Host "[+] Configuring gsudo..."
     # TODO - Check if sudo is installed
     gsudo config PowerShellLoadProfile true
 }
 
+if ($IsWindows) {
+    Install-WinGetTools
+}
+
 Install-PSRequirements
 Install-PSProfile
 Install-DotFiles
-
-if (-not $IsCodespace) {
-    Install-GSudo
-}
-
+Install-GSudo
