@@ -111,20 +111,21 @@ function Install-GSudo {
         break;
     }
 
+    if (-not (Get-Command "gsudo" -ErrorAction SilentlyContinue)) {
+        Write-Warning "[+] Gsudo not installed. Skipping..."
+        break;
+    }
+
     Write-Host "[+] Configuring gsudo..."
     # TODO - Check if sudo is installed
     gsudo config PowerShellLoadProfile true
 }
 
-# Install-PSRequirements
-# Install-PSProfile
-# Install-DotFiles
-
 if ($IsWindows) {
     Install-WinGetTools
 }
 
-if (-not $IsCodespace) {
-    Install-GSudo
-}
-
+Install-PSRequirements
+Install-PSProfile
+Install-DotFiles
+Install-GSudo
