@@ -121,7 +121,7 @@ function Set-Sandbox {
             Set-ItemProperty -Path hklm:\software\microsoft\XboxLive -Name Sandbox -Value $NewSandbox
         }
 
-        function Restart-Service {
+        function Restart-ServiceFunc {
             param(
                 [Parameter(Mandatory = $true)]
                 [string]$ServiceName
@@ -130,15 +130,28 @@ function Set-Sandbox {
             $service = Get-Service -Name $ServiceName
             if ($service.Status -eq 'Running') {
                 Write-Host "Stopping $ServiceName"
-                $service | Stop-Service
+                $service | Stop-Service -Force
             }
             Write-Host "Starting $ServiceName"
             $service | Start-Service
         }
 
-        Restart-Service XblAuthManager
-        Restart-Service DiagTrack
-        Restart-Service GamingServices
+        Restart-ServiceFunc XblAuthManager
+        Restart-ServiceFunc DiagTrack
+        Restart-ServiceFunc GamingServices
+
+        Write-Host "Resetting Windows Store cache"
+
+        $isStoreClosed = $Null -eq (Get-Process -Name "WinStore.App" -ErrorAction SilentlyContinue)
+        $wsresetProcess = Start-Process -FilePath "wsreset.exe" -PassThru -WindowStyle Hidden
+        $wsresetProcess.WaitForExit()
+
+        # wsreset opens the windows store; close it if there were no instances open before reset
+        if ($isStoreClosed) {
+            Get-Process -Name "WinStore.App" -ErrorAction SilentlyContinue | Stop-Process -Force
+        }
+
+        Write-Host "Reset Windows Store cache"
     }
 }
 
