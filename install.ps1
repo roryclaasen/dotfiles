@@ -113,12 +113,11 @@ function Install-GSudo {
     }
 
     if (-not (Get-Command "gsudo" -ErrorAction SilentlyContinue)) {
-        Write-Warning "[+] Gsudo not installed. Skipping..."
+        Write-Warning "[+] Gsudo not installed. If gsudo got installed via Install-WinGetTools it may not yet be available. Skipping..."
         break;
     }
 
     Write-Host "[+] Configuring gsudo..."
-    # TODO - Check if sudo is installed
     gsudo config PowerShellLoadProfile true
 }
 
