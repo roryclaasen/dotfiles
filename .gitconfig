@@ -120,10 +120,13 @@
     p = push
     pa = push --all
     pt = push --tags
-    done = !git push origin HEAD
+    done = push origin HEAD
 
     # pull
     up = !git pull --rebase --prune $@ && git submodule update --init --recursive
+
+    # fetch
+    f = fetch --prune --all --tags
 
     # commit
     c = commit
