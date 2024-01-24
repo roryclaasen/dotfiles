@@ -3,6 +3,7 @@
 
 # Powershell Scripts
 !profile.ps1
+!Microsoft.PowerShell_*.ps1
 
 !terminal.ps1
 !utilities.ps1
