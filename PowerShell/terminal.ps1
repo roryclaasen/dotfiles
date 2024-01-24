@@ -49,3 +49,12 @@ if ((Get-Module -ListAvailable -Name PSFzf) -And (Get-Command "Fzf.exe" -ErrorAc
 if (Get-Module -ListAvailable -Name z) {
     Import-Module z
 }
+
+if (Get-Module -ListAvailable -Name WinGetCommandNotFound) {
+    Import-Module WinGetCommandNotFound
+} else {
+    $ModulePath = "C:\Program Files\PowerToys\WinUI3Apps\..\WinGetCommandNotFound.psd1"
+    if (Test-Path $ModulePath) {
+        Import-Module $ModulePath
+    }
+}
