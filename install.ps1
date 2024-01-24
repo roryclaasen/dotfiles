@@ -75,7 +75,7 @@ function Install-DotFiles {
     $Dotfiles = @(
         ".gitconfig",
         ".gitignore_global",
-        ".p4config"
+        "p4config.ini"
     )
 
     if (-not $IsCodespace) {
