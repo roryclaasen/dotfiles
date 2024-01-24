@@ -50,6 +50,10 @@ if (Get-Module -ListAvailable -Name z) {
     Import-Module z
 }
 
+if (Get-Module -ListAvailable -Name Microsoft.WinGet.Client) {
+    Import-Module Microsoft.WinGet.Client
+}
+
 if (Get-Module -ListAvailable -Name WinGetCommandNotFound) {
     Import-Module WinGetCommandNotFound
 } else {

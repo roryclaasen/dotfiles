@@ -31,7 +31,8 @@ function Install-PSRequirements {
         'posh-git',
         'Terminal-Icons'
         'PSFzf',
-        'z'
+        'z',
+        'Microsoft.WinGet.Client'
     )
 
     $Requirements | ForEach-Object {
