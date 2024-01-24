@@ -125,7 +125,7 @@ if ($IsWindows) {
     Install-WinGetTools
 }
 
-Install-PSRequirements
 Install-PSProfile
+Install-PSRequirements
 Install-DotFiles
 Install-GSudo
