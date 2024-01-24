@@ -1,5 +1,10 @@
 $HasPoshGit = $false
 
+$SKIP_OH_MY_POSH = $false
+if ($env:PG_ENVIRONMENT -eq 1) {
+    $SKIP_OH_MY_POSH = $true
+}
+
 if (Get-Module -ListAvailable -Name posh-git) {
     Import-Module posh-git
     $HasPoshGit = $true
@@ -9,7 +14,7 @@ if (Get-Module -ListAvailable -Name Terminal-Icons) {
     Import-Module Terminal-Icons
 }
 
-if ((Get-Command "oh-my-posh")) {
+if ($SKIP_OH_MY_POSH -eq $false -and (Get-Command "oh-my-posh")) {
     $GitPromptSettings.DelimStatus.ForegroundColor = [ConsoleColor]::DarkGray
     $GitPromptSettings.BeforeStatus.Text = [string]::Empty;
     $GitPromptSettings.AfterStatus.Text = [string]::Empty;
