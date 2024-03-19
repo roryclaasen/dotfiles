@@ -66,6 +66,8 @@
 [credential]
     helper = manager
     credentialStore = dpapi
+    azreposCredentialType = oauth
+    msauthUseBroker = true
 
 [diff]
     renames = copies
