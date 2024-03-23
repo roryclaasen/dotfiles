@@ -136,7 +136,6 @@
     cm = commit -m
     cma = commit -a -m
     camend = commit --amend --reuse-message HEAD
-    lch = log -n 1 --pretty=format:'%H'
 	missing = "!f() { git cherry ${1} ${2} --verbose --abbrev=10 | grep "+ "; }; f"
 
     cl = clean -df
@@ -148,6 +147,7 @@
     s = status --short --branch
     lg = !git log --pretty=format:\"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- [%an]%C(reset)%C(bold yellow)%d%C(reset)\" --abbrev-commit -30
     last = log -1 HEAD --stat
+    lch = log -n 1 --pretty=format:'%H'
     contrib = shortlog -e --summary --numbered
 
     # diff
