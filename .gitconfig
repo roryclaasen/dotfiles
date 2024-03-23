@@ -134,8 +134,7 @@
     c = commit
     cs = commit -S
     cm = commit -m
-    acm = !git aa && git commit -m
-    cma = !git aa && git commit -m
+    cma = commit -a -m
     camend = commit --amend --reuse-message HEAD
     lch = log -n 1 --pretty=format:'%H'
 	missing = "!f() { git cherry ${1} ${2} --verbose --abbrev=10 | grep "+ "; }; f"
