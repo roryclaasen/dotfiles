@@ -13,7 +13,9 @@ function Get-LineEndings {
         [Parameter(Mandatory = $false)]
         [string]$Directory = $PWD,
         [Parameter(Mandatory = $false)]
-        [switch]$Recurse
+        [switch]$Recurse,
+        [Parameter(Mandatory = $false)]
+        [string]$Exclude = '\.git|\.vs|node_modules|packages|bin|obj|png|jpg|jpeg|gif|avif|webp|ico|ttf|woff|woff2|eot|svg|zip|rar|7z|gz|tar|bz2|exe|dll|pdb|bak|tmp|cache'
     )
 
     function Get-LineTypeForFile($file) {
@@ -41,10 +43,9 @@ function Get-LineEndings {
 
     Write-Host "Getting line endings for files in $Directory"
 
-    $exclude = '\.git|\.vs|node_modules|packages|bin|obj|png|jpg|jpeg|gif|avif|webp|ico|ttf|woff|woff2|eot|svg|zip|rar|7z|gz|tar|bz2|exe|dll|pdb|bak|tmp|cache'
     $output = @()
 
-    $files = Get-ChildItem -Path $Directory -Recurse:$Recurse.IsPresent -File | Where-Object { $_.FullName -notMatch $exclude }
+    $files = Get-ChildItem -Path $Directory -Recurse:$Recurse.IsPresent -File | Where-Object { $_.FullName -notMatch $Exclude }
     $files | ForEach-Object {
         $file = $_
         $output += [PSCustomObject]@{
