@@ -62,3 +62,8 @@ if (Get-Module -ListAvailable -Name WinGetCommandNotFound) {
         Import-Module $ModulePath
     }
 }
+
+if (Get-Module -ListAvailable -Name gsudoModule) {
+    Import-Module gsudoModule
+    Set-Alias 'sudo' 'gsudo'
+}

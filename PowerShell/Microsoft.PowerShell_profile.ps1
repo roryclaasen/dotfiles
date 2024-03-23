@@ -8,12 +8,6 @@ $global:RorysProfile = $true
 . (Join-Path $PSScriptRoot "utilities.ps1")
 . (Join-Path $PSScriptRoot "sandbox.ps1")
 
-
-if (Get-Module -ListAvailable -Name gsudoModule) {
-    Import-Module gsudoModule
-    Set-Alias 'sudo' 'gsudo'
-}
-
 if ($host.Name -eq 'Visual Studio Code Host') {
     Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
 }
