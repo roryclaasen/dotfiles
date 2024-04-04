@@ -1,7 +1,7 @@
 function Get-SavedSandboxConfig {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $false, HelpMessage = "Wether or not to include the default sandbox configuration")]
+        [Parameter(Mandatory = $false, HelpMessage = "Whether or not to include the default sandbox configuration")]
         [bool]$IncludeRetail = $true
     )
 
