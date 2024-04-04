@@ -67,3 +67,7 @@ if (Get-Module -ListAvailable -Name gsudoModule) {
     Import-Module gsudoModule
     Set-Alias 'sudo' 'gsudo'
 }
+
+if (Get-Module -ListAvailable -Name Az) {
+    # Import-Module Az
+}

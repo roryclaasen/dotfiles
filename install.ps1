@@ -1,3 +1,9 @@
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory = $false, HelpMessage = "Whether or not to install as a work profile")]
+    [switch]$IsWork = $false
+)
+
 $IsCodespace = $env:CODESPACES -eq $true
 
 function Install-WinGetTools {
@@ -34,6 +40,10 @@ function Install-PSRequirements {
         'z',
         'Microsoft.WinGet.Client'
     )
+
+    if ($IsWork) {
+        $Requirements += 'Az'
+    }
 
     $Requirements | ForEach-Object {
         if (Get-Module -ListAvailable -Name $_) {
