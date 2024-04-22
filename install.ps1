@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false, HelpMessage = "Whether or not to install as a work profile")]
