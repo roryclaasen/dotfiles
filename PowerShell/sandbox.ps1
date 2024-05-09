@@ -1,4 +1,4 @@
-function Get-SavedSandboxConfig {
+function Get-SandboxConfig {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $false, HelpMessage = "Whether or not to include the default sandbox configuration")]
@@ -16,6 +16,27 @@ function Get-SavedSandboxConfig {
     }
 
     return $DefaultTable
+}
+
+function Add-SandboxConfig {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true, HelpMessage = "The title name.")]
+        [string]$Name,
+        [Parameter(Mandatory = $true, HelpMessage = "The sandbox id.")]
+        [string]$Sandbox
+    )
+
+    $JsonFile = Join-Path $PSScriptRoot "Sandboxes.json"
+    if (Test-Path $JsonFile) {
+        $SandboxMap = Get-Content $JsonFile -Raw | ConvertFrom-Json -AsHashtable
+    }
+    else {
+        $SandboxMap = @{}
+    }
+
+    $SandboxMap[$Name] = $Sandbox
+    $SandboxMap | ConvertTo-Json | Set-Content $JsonFile
 }
 
 function Get-XblPCSandboxCommand {
