@@ -54,9 +54,13 @@ if (Get-Module -ListAvailable -Name Microsoft.WinGet.Client) {
     Import-Module Microsoft.WinGet.Client
 }
 
-if (Get-Module -ListAvailable -Name WinGetCommandNotFound) {
+if (Get-Module -ListAvailable -Name Microsoft.WinGet.CommandNotFound) {
+    Import-Module Microsoft.WinGet.CommandNotFound
+}
+elseif (Get-Module -ListAvailable -Name WinGetCommandNotFound) {
     Import-Module WinGetCommandNotFound
-} else {
+}
+else {
     $ModulePath = "C:\Program Files\PowerToys\WinUI3Apps\..\WinGetCommandNotFound.psd1"
     if (Test-Path $ModulePath) {
         Import-Module $ModulePath
