@@ -116,7 +116,7 @@ function Set-Sandbox {
         Break
     }
 
-    $SandboxMap = Get-SavedSandboxConfig
+    $SandboxMap = Get-SandboxConfig
 
     $NewSandbox = $Sandbox
     if ($SandboxMap.ContainsKey($Sandbox)) {
