@@ -2,7 +2,7 @@ function Get-SandboxConfig {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $false, HelpMessage = "Whether or not to include the default sandbox configuration")]
-        [bool]$IncludeRetail = $true
+        [switch]$IncludeRetail
     )
 
     $DefaultTable = @{}
@@ -116,7 +116,7 @@ function Set-Sandbox {
         Break
     }
 
-    $SandboxMap = Get-SandboxConfig
+    $SandboxMap = Get-SandboxConfig -IncludeRetail
 
     $NewSandbox = $Sandbox
     if ($SandboxMap.ContainsKey($Sandbox)) {
