@@ -68,6 +68,7 @@
     credentialStore = dpapi
     azreposCredentialType = oauth
     msauthUseBroker = true
+    msauthUseDefaultAccount = true
 
 [diff]
     renames = copies
