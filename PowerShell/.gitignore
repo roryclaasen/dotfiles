@@ -4,6 +4,7 @@
 # Powershell Scripts
 !profile.ps1
 !Microsoft.PowerShell_*.ps1
+!Microsoft.VSCode_profile.ps1
 
 !terminal.ps1
 !utilities.ps1
@@ -12,3 +13,4 @@
 # Config Files
 !.gitignore
 !roryclaasen.omp.json
+!powershell.config.json
