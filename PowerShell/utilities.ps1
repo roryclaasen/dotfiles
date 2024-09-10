@@ -57,8 +57,7 @@ function Get-LineEndings {
     Write-Output $output
 }
 
-function Set-FilesWriteable
-{
+function Set-FilesWriteable {
     param(
         [Parameter(Mandatory = $false)]
         [string]$Directory = $PWD,
