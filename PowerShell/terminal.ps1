@@ -76,6 +76,6 @@ if (Get-Module -ListAvailable -Name Az) {
     # Import-Module Az
 }
 
-if (Get-Command "Fzf.exe" -ErrorAction SilentlyContinue) {
+if (Get-Command "fnm.exe" -ErrorAction SilentlyContinue) {
     fnm env --use-on-cd --shell power-shell | Out-String | Invoke-Expression
 }
