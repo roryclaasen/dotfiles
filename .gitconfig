@@ -40,8 +40,8 @@
     required = true
 
 [branch]
-    # set up 'git pull' to rebase instead of merge
-    autosetuprebase = always
+    autosetupmerge = always
+    autosetuprebase = never
 
 [fetch]
   prune = true
