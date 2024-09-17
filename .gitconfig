@@ -40,7 +40,7 @@
     required = true
 
 [branch]
-    autosetupmerge = always
+    # autosetupmerge = always
     autosetuprebase = never
 
 [fetch]
