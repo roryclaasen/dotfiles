@@ -65,7 +65,7 @@ function Install-PSProfile {
     if (Test-Path $Link) {
         $LinkProperties = Get-ItemProperty $Link;
         if (-not $LinkProperties.LinkType) {
-            Write-Warn "Powershell Profile directory already exists. Will not overwrite"
+            Write-Warning "Powershell Profile directory already exists. Will not overwrite"
         }
         elseif ($LinkProperties.Target -ne $Target) {
             Write-Warning "Powershell Profile link already exists, but points to a different location. Will not overwrite."
