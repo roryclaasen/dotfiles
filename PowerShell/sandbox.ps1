@@ -95,7 +95,7 @@ function Get-Sandbox {
         return "RETAIL"
     }
     else {
-        $SandboxMap = Get-SavedSandboxConfig -IncludeRetail $false
+        $SandboxMap = Get-SandboxConfig -IncludeRetail $false
         if ($SandboxMap.ContainsKey($Sandbox)) {
             return $SandboxMap[$Sandbox]
         }
@@ -178,13 +178,13 @@ function Set-Sandbox {
 
 Register-ArgumentCompleter -CommandName Get-Sandbox -ParameterName Sandbox -ScriptBlock {
     param($commandName, $parameterName, $stringMatch)
-    $SandboxMap = Get-SavedSandboxConfig -IncludeRetail $false
+    $SandboxMap = Get-SandboxConfig -IncludeRetail $false
     return $SandboxMap.Keys | Sort-Object -Unique | Where-Object { $_ -like "$stringMatch*" }
 }
 
 Register-ArgumentCompleter -CommandName Set-Sandbox -ParameterName Sandbox -ScriptBlock {
     param($commandName, $parameterName, $stringMatch)
-    $SandboxMap = Get-SavedSandboxConfig
+    $SandboxMap = Get-SandboxConfig
     return ($SandboxMap.Keys + $SandboxMap.Values) | Sort-Object -Unique | Where-Object { $_ -like "$stringMatch*" }
 }
 
