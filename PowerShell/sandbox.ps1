@@ -15,6 +15,7 @@ function Get-SandboxConfig {
         return $DefaultTable + (Get-Content $JsonFile -Raw | ConvertFrom-Json -AsHashtable)
     }
 
+    Write-Verbose "No sandbox configuration found. Using default."
     return $DefaultTable
 }
 
@@ -42,6 +43,7 @@ function Add-SandboxConfig {
 function Get-XblPCSandboxCommand {
     $ExePath = Get-Command XblPCSandbox.exe -ErrorAction SilentlyContinue
     if ($ExePath) {
+        Write-Verbose "Found '$($ExePath.Source)' via Get-Command"
         return $ExePath.Source
     }
 
@@ -49,16 +51,18 @@ function Get-XblPCSandboxCommand {
     if (-not [string]::IsNullOrWhiteSpace($GDKPath)) {
         $ExePath = Join-Path $GDKPath "bin\XblPCSandbox.exe"
         if (Test-Path $ExePath) {
+            Write-Verbose "Found '$ExePath' via GameDK environment variable"
             return $ExePath
         }
     }
 
     try {
-        $GDKInstallRoots = Get-ItemProperty -Path 'hklm:\software\microsoft\GDK\Installed Roots'
+        $GDKInstallRoots = Get-ItemProperty -Path "hklm:\software\microsoft\GDK\Installed Roots"
         $GDKPath = $GDKInstallRoots.GDKInstallPath
         if (-not [string]::IsNullOrWhiteSpace($GDKPath)) {
             $ExePath = Join-Path $GDKPath "bin\XblPCSandbox.exe"
             if (Test-Path $ExePath) {
+                Write-Verbose "Found '$ExePath' via registry"
                 return $ExePath
             }
         }
@@ -83,15 +87,19 @@ function Get-Sandbox {
             if ([string]::IsNullOrWhiteSpace($Sandbox)) {
                 throw "Unable to get sandbox from XblPCSandbox.exe"
             }
+
+            Write-Verbose "Found sandbox via XblPCSandbox.exe"
             return $Sandbox
         }
         catch {
             $XboxLive = Get-ItemProperty -Path hklm:\software\microsoft\XboxLive
             if ($XboxLive.Sandbox) {
+                Write-Verbose "Found sandbox in registry"
                 return $XboxLive.Sandbox
             }
         }
 
+        Write-Verbose "Unable to get sandbox from XblPCSandbox.exe or registry"
         return "RETAIL"
     }
     else {
@@ -113,7 +121,7 @@ function Set-Sandbox {
 
     if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
         Write-Error "You must run this cmdlet as an administrator."
-        Break
+        break
     }
 
     $SandboxMap = Get-SandboxConfig -IncludeRetail
@@ -126,7 +134,7 @@ function Set-Sandbox {
     $CurrentSanbox = Get-Sandbox
     if ($CurrentSanbox -eq $NewSandbox) {
         Write-Host "Already in sandbox $NewSandbox"
-        break;
+        break
     }
 
     try {
@@ -136,10 +144,10 @@ function Set-Sandbox {
     catch {
         Write-Host "Switching to Sandbox $NewSandbox"
         if ($NewSandbox -ieq "RETAIL") {
-            Remove-ItemProperty -Path hklm:\software\microsoft\XboxLive -Name Sandbox
+            Remove-ItemProperty -Path "hklm:\software\microsoft\XboxLive" -Name Sandbox
         }
         else {
-            Set-ItemProperty -Path hklm:\software\microsoft\XboxLive -Name Sandbox -Value $NewSandbox
+            Set-ItemProperty -Path "hklm:\software\microsoft\XboxLive" -Name Sandbox -Value $NewSandbox
         }
 
         function Restart-ServiceFunc {
@@ -149,7 +157,7 @@ function Set-Sandbox {
             )
 
             $service = Get-Service -Name $ServiceName
-            if ($service.Status -eq 'Running') {
+            if ($service.Status -eq "Running") {
                 Write-Host "Stopping $ServiceName"
                 $service | Stop-Service -Force
             }
@@ -157,9 +165,9 @@ function Set-Sandbox {
             $service | Start-Service
         }
 
-        Restart-ServiceFunc XblAuthManager
-        Restart-ServiceFunc DiagTrack
-        Restart-ServiceFunc GamingServices
+        Restart-ServiceFunc "XblAuthManager"
+        Restart-ServiceFunc "DiagTrack"
+        Restart-ServiceFunc "GamingServices"
 
         Write-Host "Resetting Windows Store cache"
 
