@@ -42,12 +42,6 @@ elseif ($Terminal -eq "OMP") {
         New-Alias -Name 'Set-PoshContext' -Value 'Set-PoshGitStatus' -Scope Global -Force
     }
 }
-elseif ($HasPoshGit) {
-    $env:POSH_GIT_ENABLED = $true
-}
-
-$env:STARSHIP_CONFIG = $(Join-Path -Path $PSScriptRoot -ChildPath "starship.toml")
-Invoke-Expression (&starship init powershell)
 
 if (Get-Module -ListAvailable -Name Terminal-Icons) {
     Import-Module Terminal-Icons
