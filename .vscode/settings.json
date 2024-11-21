@@ -8,5 +8,5 @@
     ".git": true,
     "PowerShell/Modules": true,
     "PowerShell/Scripts": true
-  },
+  }
 }
