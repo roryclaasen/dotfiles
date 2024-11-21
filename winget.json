@@ -8,6 +8,9 @@
           "PackageIdentifier": "JanDeDobbeleer.OhMyPosh"
         },
         {
+          "PackageIdentifier": "Starship.Starship"
+        },
+        {
           "PackageIdentifier": "junegunn.fzf"
         },
         {

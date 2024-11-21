@@ -14,3 +14,4 @@
 !.gitignore
 !roryclaasen.omp.json
 !powershell.config.json
+!starship.toml

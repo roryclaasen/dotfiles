@@ -1,20 +1,24 @@
 $HasPoshGit = $false
-
-$SKIP_OH_MY_POSH = $false
-if ($env:PG_ENVIRONMENT -eq 1) {
-    $SKIP_OH_MY_POSH = $true
-}
-
 if (Get-Module -ListAvailable -Name posh-git) {
     Import-Module posh-git
     $HasPoshGit = $true
 }
 
-if (Get-Module -ListAvailable -Name Terminal-Icons) {
-    Import-Module Terminal-Icons
+$Terminal = "Starship"
+
+if ($env:PG_ENVIRONMENT -eq 1) {
+    $Terminal = "NA"
 }
 
-if ($SKIP_OH_MY_POSH -eq $false -and (Get-Command "oh-my-posh")) {
+if ($Terminal -eq "Starship") {
+    $env:STARSHIP_CONFIG = $(Join-Path -Path $PSScriptRoot -ChildPath "starship.toml")
+    Invoke-Expression (&starship init powershell)
+}
+elseif ($Terminal -eq "OMP") {
+    if ($env:PG_ENVIRONMENT -eq 1) {
+        $SKIP_OH_MY_POSH = $true
+    }
+
     $GitPromptSettings.DelimStatus.ForegroundColor = [ConsoleColor]::DarkGray
     $GitPromptSettings.BeforeStatus.Text = [string]::Empty;
     $GitPromptSettings.AfterStatus.Text = [string]::Empty;
@@ -40,6 +44,13 @@ if ($SKIP_OH_MY_POSH -eq $false -and (Get-Command "oh-my-posh")) {
 }
 elseif ($HasPoshGit) {
     $env:POSH_GIT_ENABLED = $true
+}
+
+$env:STARSHIP_CONFIG = $(Join-Path -Path $PSScriptRoot -ChildPath "starship.toml")
+Invoke-Expression (&starship init powershell)
+
+if (Get-Module -ListAvailable -Name Terminal-Icons) {
+    Import-Module Terminal-Icons
 }
 
 if ((Get-Module -ListAvailable -Name PSFzf) -And (Get-Command "Fzf.exe" -ErrorAction SilentlyContinue)) {
