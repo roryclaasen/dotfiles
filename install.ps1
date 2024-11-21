@@ -22,7 +22,7 @@ function Install-WinGetTools {
         '--disable-interactivity',
         '--accept-package-agreements',
         '--accept-source-agreements'
-        '--no-upgrade'
+        # '--no-upgrade'
     )
 
     winget import $wingetImportOptions
