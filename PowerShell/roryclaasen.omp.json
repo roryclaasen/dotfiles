@@ -101,12 +101,6 @@
           "template": "<p:block>-[</>\udb80\udf99 {{ .Full }}<p:block>]</>",
           "foreground": "p:foreground",
           "type": "node"
-        },
-        {
-          "style": "plain",
-          "template": "<p:block>-[</>\udb80\udf99 {{ .Full }}<p:block>]</>",
-          "foreground": "p:foreground",
-          "type": "node"
         }
       ]
     },
