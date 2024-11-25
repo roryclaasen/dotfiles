@@ -1,8 +1,20 @@
 #!/usr/bin/env pwsh
-[CmdletBinding()]
+[CmdletBinding(DefaultParameterSetName = "Default")]
 param(
-    [Parameter(Mandatory = $false, HelpMessage = "Whether or not to install as a work profile")]
-    [switch]$IsWork = $false
+    [Parameter(Mandatory = $false, ParameterSetName = "Picky")]
+    [switch]$WinGet = $false,
+
+    [Parameter(Mandatory = $false, ParameterSetName = "Picky")]
+    [switch]$PSProfile = $false,
+
+    [Parameter(Mandatory = $false, ParameterSetName = "Picky")]
+    [switch]$PSRequirements = $false,
+
+    [Parameter(Mandatory = $false, ParameterSetName = "Picky")]
+    [switch]$DotFiles = $false,
+
+    [Parameter(Mandatory = $false, ParameterSetName = "Picky")]
+    [switch]$GSudo = $false
 )
 
 $IsCodespace = $env:CODESPACES -eq $true
@@ -41,10 +53,6 @@ function Install-PSRequirements {
         'z',
         'Microsoft.WinGet.Client'
     )
-
-    if ($IsWork) {
-        $Requirements += 'Az'
-    }
 
     $Requirements | ForEach-Object {
         if (Get-Module -ListAvailable -Name $_) {
@@ -97,9 +105,7 @@ function Install-DotFiles {
         )
     }
 
-    $Dotfiles | Get-ChildItem -Force
-    | Where-Object { -not $_.PSisContainer }
-    | ForEach-Object {
+    $Dotfiles | Get-ChildItem -Force | Where-Object { -not $_.PSisContainer } | ForEach-Object {
         $Link = Join-Path -Path $HOME -ChildPath $_.Name
         $Target = $_
 
@@ -134,10 +140,23 @@ function Install-GSudo {
 }
 
 if ($IsWindows) {
-    Install-WinGetTools
+    if ($PsCmdlet.ParameterSetName -eq "Picky" -and $WinGet) {
+        Install-WinGetTools
+    }
 }
 
-Install-PSProfile
-Install-PSRequirements
-Install-DotFiles
-Install-GSudo
+if ($PsCmdlet.ParameterSetName -eq "Picky" -and $PSProfile) {
+    Install-PSProfile
+}
+
+if ($PsCmdlet.ParameterSetName -eq "Picky" -and $PSRequirements) {
+    Install-PSRequirements
+}
+
+if ($PsCmdlet.ParameterSetName -eq "Picky" -and $DotFiles) {
+    Install-DotFiles
+}
+
+if ($PsCmdlet.ParameterSetName -eq "Picky" -and $GSudo) {
+    Install-GSudo
+}
