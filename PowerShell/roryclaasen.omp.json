@@ -23,23 +23,37 @@
       "segments": [
         {
           "style": "plain",
-          "template": "<p:block>\u250f[</>{{ .UserName }}<p:block>]</>",
+          "template": "<p:block>┏</>",
+          "type": "text"
+        },
+        {
+          "style": "plain",
+          "template": "<p:block>[</>{{ .UserName }}<p:block>]</>",
           "foreground": "p:foreground",
           "type": "session"
         },
         {
-          "properties": {
-            "fetch_upstream_icon": true
-          },
           "style": "plain",
           "foreground": "p:foreground",
           "type": "git",
+          "properties": {
+            "fetch_status": true,
+            "fetch_upstream_icon": true,
+            "source": "pwsh",
+            "branch_icon": "\uf418 ",
+            "branch_identical_icon": "\u2261",
+            "branch_behind_icon": "⇣",
+            "branch_ahead_icon": "⇡"
+          },
           "templates": [
-            "{{ if .Env.POSH_GIT_STRING }}",
             "<p:block>-[</>",
-            "{{ .UpstreamIcon }} {{ .Env.POSH_GIT_STRING }}",
-            "<p:block>]</>",
-            "{{ end }}"
+            "{{ url .UpstreamIcon .UpstreamURL }} ",
+            "{{ .HEAD }}",
+            "{{ if .BranchStatus }} {{ .BranchStatus }}{{ end }}",
+            "{{ if .Staging.Changed }} <green>{{ .Staging.String }}</>{{ end }}",
+            "{{ if and (.Working.Changed) (.Staging.Changed) }} <p:block>|</p>{{ end }}",
+            "{{ if .Working.Changed }} <red>{{ .Working.String }}</>{{ end }}",
+            "<p:block>]</>"
           ]
         },
         {
@@ -52,7 +66,7 @@
           "style": "plain",
           "template": "<p:block>-[</>x{{ .Meaning }}<p:block>]</>",
           "foreground": "p:foreground",
-          "type": "exit"
+          "type": "status"
         },
         {
           "properties": {
@@ -72,15 +86,27 @@
         },
         {
           "style": "plain",
-          "template": "<p:block>-[</>\ue650 {{ .Context }}<p:block>]</>",
+          "template": "<p:block>-[</>\ue77f {{ .Full }}<p:block>]</>",
           "foreground": "p:foreground",
-          "type": "docker"
+          "type": "dotnet"
         },
         {
           "style": "plain",
-          "template": "<p:block>-[</>\udb82\ude0a {{ .Version }}<p:block>]</>",
-          "foreground": "yellow",
-          "type": "upgrade"
+          "template": "<p:block>-[</>\uedaf {{ .Full }}<p:block>]</>",
+          "foreground": "p:foreground",
+          "type": "java"
+        },
+        {
+          "style": "plain",
+          "template": "<p:block>-[</>\udb80\udf99 {{ .Full }}<p:block>]</>",
+          "foreground": "p:foreground",
+          "type": "node"
+        },
+        {
+          "style": "plain",
+          "template": "<p:block>-[</>\udb80\udf99 {{ .Full }}<p:block>]</>",
+          "foreground": "p:foreground",
+          "type": "node"
         }
       ]
     },
@@ -89,11 +115,16 @@
       "alignment": "left",
       "segments": [
         {
+          "style": "plain",
+          "template": "<p:block>┖</>",
+          "type": "text"
+        },
+        {
           "properties": {
             "style": "full"
           },
           "style": "plain",
-          "template": "<p:block>\u2516[</>{{ .Path }}<p:block>]</>",
+          "template": "<p:block>[</>{{ .Path }}<p:block>]</>",
           "foreground": "p:foreground",
           "type": "path"
         }
@@ -111,7 +142,7 @@
           "style": "plain",
           "template": "$",
           "foreground": "p:foreground",
-          "type": "exit",
+          "type": "status",
           "foreground_templates": [
             "{{ if gt .Code 0 }}p:error{{ end }}"
           ]

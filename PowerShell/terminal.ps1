@@ -4,21 +4,9 @@ if (Get-Module -ListAvailable -Name posh-git) {
     $HasPoshGit = $true
 }
 
-$Terminal = "Starship"
-
 if ($env:PG_ENVIRONMENT -eq 1) {
-    $Terminal = "NA"
-}
-
-if ($Terminal -eq "Starship") {
-    $env:STARSHIP_CONFIG = $(Join-Path -Path $PSScriptRoot -ChildPath "starship.toml")
-    Invoke-Expression (&starship init powershell)
-}
-elseif ($Terminal -eq "OMP") {
-    if ($env:PG_ENVIRONMENT -eq 1) {
-        $SKIP_OH_MY_POSH = $true
-    }
-
+    # No theme
+} else {
     $GitPromptSettings.DelimStatus.ForegroundColor = [ConsoleColor]::DarkGray
     $GitPromptSettings.BeforeStatus.Text = [string]::Empty;
     $GitPromptSettings.AfterStatus.Text = [string]::Empty;
