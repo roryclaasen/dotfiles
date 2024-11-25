@@ -86,12 +86,6 @@
         },
         {
           "style": "plain",
-          "template": "<p:block>-[</>\ue77f {{ .Full }}<p:block>]</>",
-          "foreground": "p:foreground",
-          "type": "dotnet"
-        },
-        {
-          "style": "plain",
           "template": "<p:block>-[</>\uedaf {{ .Full }}<p:block>]</>",
           "foreground": "p:foreground",
           "type": "java"
