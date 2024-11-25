@@ -1,7 +1,3 @@
-if (Get-Module -ListAvailable -Name posh-git) {
-    Import-Module posh-git
-}
-
 if ($env:PG_ENVIRONMENT -eq 1) {
     # No theme
 }
@@ -10,6 +6,10 @@ else {
     if (Test-Path $PoshTheme) {
         oh-my-posh init pwsh --config $PoshTheme | Invoke-Expression
     }
+}
+
+if (Get-Module -ListAvailable -Name posh-git) {
+    Import-Module posh-git
 }
 
 if (Get-Module -ListAvailable -Name Terminal-Icons) {
