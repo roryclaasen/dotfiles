@@ -46,10 +46,6 @@ if (Get-Module -ListAvailable -Name gsudoModule) {
     Set-Alias 'sudo' 'gsudo'
 }
 
-if (Get-Module -ListAvailable -Name Az) {
-    # Import-Module Az
-}
-
 if (Get-Command "fnm.exe" -ErrorAction SilentlyContinue) {
     fnm env --use-on-cd --shell power-shell | Out-String | Invoke-Expression
 }
