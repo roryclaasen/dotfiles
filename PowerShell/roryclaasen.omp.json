@@ -74,7 +74,7 @@
             "threshold": 0
           },
           "style": "plain",
-          "template": "<p:block>-[</> {{ .FormattedMs }}<p:block>]</>",
+          "template": "<p:block>-[</>  {{ .FormattedMs }}<p:block>]</>",
           "foreground": "p:foreground",
           "type": "executiontime"
         },
