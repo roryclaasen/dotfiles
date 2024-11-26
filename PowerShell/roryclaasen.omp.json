@@ -15,7 +15,7 @@
     "template": "> ",
     "foreground": "p:foreground"
   },
-  "console_title_template": "{{if .Root}}⚡ {{end}}{{.Folder}} - {{.Shell | replace \"pwsh\" \"Powershell\"}} {{.ShellVersion}}",
+  "console_title_template": "{{if .Root}}⚡ {{end}}{{.Folder}} - {{.Shell}} {{.ShellVersion}}",
   "blocks": [
     {
       "type": "prompt",
@@ -40,8 +40,8 @@
             "fetch_status": true,
             "fetch_upstream_icon": true,
             "source": "pwsh",
-            "branch_icon": "\uf418 ",
-            "branch_identical_icon": "\u2261",
+            "branch_icon": " ",
+            "branch_identical_icon": "≡",
             "branch_behind_icon": "⇣",
             "branch_ahead_icon": "⇡"
           },
@@ -58,7 +58,7 @@
         },
         {
           "style": "plain",
-          "template": "<p:block>-[</>\uf0e7<p:block>]</>",
+          "template": "<p:block>-[</><p:block>]</>",
           "foreground": "yellow",
           "type": "root"
         },
@@ -74,27 +74,33 @@
             "threshold": 0
           },
           "style": "plain",
-          "template": "<p:block>-[</>\udb81\udd1b {{ .FormattedMs }}<p:block>]</>",
+          "template": "<p:block>-[</> {{ .FormattedMs }}<p:block>]</>",
           "foreground": "p:foreground",
           "type": "executiontime"
         },
         {
           "style": "plain",
-          "template": "<p:block>-[</>\ue77f {{ .Full }}<p:block>]</>",
-          "foreground": "p:foreground",
+          "template": "<p:block>-[</> {{ .Full }}<p:block>]</>",
+          "foreground": "#b915ff",
           "type": "dotnet"
         },
         {
           "style": "plain",
-          "template": "<p:block>-[</>\uedaf {{ .Full }}<p:block>]</>",
-          "foreground": "p:foreground",
+          "template": "<p:block>-[</> {{ .Full }}<p:block>]</>",
+          "foreground": "#f6901d",
           "type": "java"
         },
         {
           "style": "plain",
-          "template": "<p:block>-[</>\udb80\udf99 {{ .Full }}<p:block>]</>",
-          "foreground": "p:foreground",
+          "template": "<p:block>-[</>󰎙 {{ .Full }}<p:block>]</>",
+          "foreground": "#709d53",
           "type": "node"
+        },
+        {
+          "style": "plain",
+          "template": "<p:block>-[</>  {{ .Context  }}<p:block>]</>",
+          "foreground": "#1c90ed",
+          "type": "docker"
         }
       ]
     },
