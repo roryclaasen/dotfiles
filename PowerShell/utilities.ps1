@@ -1,4 +1,5 @@
 function colors() {
+    [CmdletBinding()]
     # output all the colour combinations for text/background
     # https://stackoverflow.com/questions/20541456/list-of-all-colors-available-for-powershell/41954792#41954792
     $colors = [enum]::GetValues([System.ConsoleColor])
@@ -9,6 +10,7 @@ function colors() {
 }
 
 function Get-LineEndings {
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $false)]
         [string]$Directory = $PWD,
@@ -58,6 +60,7 @@ function Get-LineEndings {
 }
 
 function Set-FilesWriteable {
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $false)]
         [string]$Directory = $PWD,
