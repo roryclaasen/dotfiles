@@ -113,3 +113,15 @@ function Get-EnvironmentVariables {
 }
 
 Set-Alias 'Get-Env' 'Get-EnvironmentVariables'
+
+function ConvertTo-Base64 {
+    [CmdletBinding()]
+    param (
+        [Parameter(ValueFromPipeline, Mandatory = $true)]
+        $InputObject
+    )
+
+    return [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($InputObject))
+}
+
+Set-Alias 'base64' 'ConvertTo-Base64'
