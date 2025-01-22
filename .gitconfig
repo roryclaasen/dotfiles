@@ -67,7 +67,7 @@
 
 [diff]
     renames = copies
-    mnemonicprefix = true
+    # mnemonicprefix = true
     compactionHeuristic = true
     # tool = code
 
