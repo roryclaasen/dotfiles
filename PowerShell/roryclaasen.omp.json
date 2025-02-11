@@ -1,5 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "var": {
+    "ShowSandbox": true
+  },
   "palette": {
     "block": "darkGray",
     "block-dir": "green",
@@ -105,7 +108,7 @@
         {
           "style": "plain",
           "type": "winreg",
-          "template": "<p:block>-[</> {{ .Value }}<p:block>]</>",
+          "template": "{{ if .Var.ShowSandbox }}<p:block>-[</> {{ .Value }}<p:block>]</>{{ end }}",
           "foreground": "#14a314",
           "properties": {
             "path": "HKLM\\SOFTWARE\\Microsoft\\XboxLive\\Sandbox",
