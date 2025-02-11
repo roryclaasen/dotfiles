@@ -101,6 +101,16 @@
           "template": "<p:block>-[</> {{ .Context  }}<p:block>]</>",
           "foreground": "#1c90ed",
           "type": "docker"
+        },
+        {
+          "style": "plain",
+          "type": "winreg",
+          "template": "<p:block>-[</> {{ .Value }}<p:block>]</>",
+          "foreground": "#14a314",
+          "properties": {
+            "path": "HKLM\\SOFTWARE\\Microsoft\\XboxLive\\Sandbox",
+            "fallback": "RETAIL"
+          }
         }
       ]
     },
