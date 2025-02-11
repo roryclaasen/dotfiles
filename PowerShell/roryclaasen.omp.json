@@ -98,7 +98,7 @@
         },
         {
           "style": "plain",
-          "template": "<p:block>-[</>  {{ .Context  }}<p:block>]</>",
+          "template": "<p:block>-[</> {{ .Context  }}<p:block>]</>",
           "foreground": "#1c90ed",
           "type": "docker"
         }
