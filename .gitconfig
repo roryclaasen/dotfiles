@@ -98,10 +98,10 @@
 
     # branch
 	b  = branch
-	bd  = branch -d
+	bd  = branch -D
     br = for-each-ref --sort=-committerdate --format=\"%(color:yellow)%(authordate:relative)\t%(color:red)%(authorname)\t%(color:white)%(color:bold)%(refname:short)\" refs/remotes
     brl = branch --sort=-committerdate --format='%(color:yellow)%(authordate:relative)\t%(color:red)%(authorname)\t%(color:white)%(color:bold)%(refname:short)'
-    del = branch -d
+    del = branch -D
 
 
     # checkout
