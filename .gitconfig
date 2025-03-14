@@ -111,10 +111,6 @@
     # switch
     sw   = switch
 
-    # clone
-	cl = clone --recursive -j8
-
-
     # push
     p = push
     pa = push --all
