@@ -101,6 +101,12 @@
         },
         {
           "style": "plain",
+          "template": "<p:block>-[</> {{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}<p:block>]</>",
+          "foreground": "#906cff",
+          "type": "python"
+        },
+        {
+          "style": "plain",
           "template": "<p:block>-[</> {{ .Context  }}<p:block>]</>",
           "foreground": "#1c90ed",
           "type": "docker"
