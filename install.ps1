@@ -100,8 +100,7 @@ function Install-DotFiles {
 
     if (-not $IsCodespace) {
         $Dotfiles += @(
-            ".bash_profile",
-            ".bashrc"
+            ".bash_profile"
         )
     }
 
