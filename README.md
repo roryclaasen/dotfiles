@@ -2,7 +2,7 @@
 
 Config files and PowerShell scripts I use for my Windows machine(s).
 
-## Instalation
+## Installation
 
 You can clone the repository wherever you want (well on same drive as `$home`). (I like to keep it in `~\dotfiles`.) The setup script will setup symlinks to the cloned repository.
 
