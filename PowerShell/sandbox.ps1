@@ -131,8 +131,8 @@ function Set-Sandbox {
         $NewSandbox = $SandboxMap[$Sandbox]
     }
 
-    $CurrentSanbox = Get-Sandbox
-    if ($CurrentSanbox -eq $NewSandbox) {
+    $CurrentSandbox = Get-Sandbox
+    if ($CurrentSandbox -eq $NewSandbox) {
         Write-Host "Already in sandbox $NewSandbox"
         break
     }
