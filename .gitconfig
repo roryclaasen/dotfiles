@@ -61,9 +61,15 @@
 [credential]
     helper = manager
     credentialStore = dpapi
-    azreposCredentialType = oauth
+
+    allowWindowsAuth = true
     msauthUseBroker = true
     msauthUseDefaultAccount = true
+
+    azreposCredentialType = oauth
+
+	helper =
+	helper = C:/Users/roryclaasen/.dotnet/tools/git-credential-manager.exe
 
 [diff]
     renames = copies
