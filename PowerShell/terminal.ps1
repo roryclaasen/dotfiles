@@ -2,7 +2,7 @@ if ($env:PG_ENVIRONMENT -eq 1) {
     # No theme
 }
 else {
-    $PoshTheme = Join-Path -Path $PSScriptRoot -ChildPath "roryclaasen.omp.json"
+    $PoshTheme = [System.IO.Path]::Combine($PSScriptRoot, "roryclaasen.omp.json")
     if (Test-Path $PoshTheme) {
         oh-my-posh init pwsh --config $PoshTheme | Invoke-Expression
     }

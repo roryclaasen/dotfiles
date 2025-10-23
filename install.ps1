@@ -26,7 +26,7 @@ function Install-WinGetTools {
     }
 
     Write-Host "[+] Importing Windows Package Manager config..."
-    $fileConfig = Join-Path -Path $PSScriptRoot -ChildPath "winget.json"
+    $fileConfig = [System.IO.Path]::Combine($PSScriptRoot, "winget.json")
 
     $wingetImportOptions = @(
         $fileConfig,
@@ -68,7 +68,7 @@ function Install-PSProfile {
     Write-Host "[+] Setting PowerShell Profile..."
 
     $Link = Split-Path $PROFILE.CurrentUserAllHosts
-    $Target = Join-Path -Path $PSScriptRoot -ChildPath "PowerShell"
+    $Target = [System.IO.Path]::Combine($PSScriptRoot, "PowerShell")
 
     if (Test-Path $Link) {
         $LinkProperties = Get-ItemProperty $Link;
@@ -105,7 +105,7 @@ function Install-DotFiles {
     }
 
     $Dotfiles | Get-ChildItem -Force | Where-Object { -not $_.PSisContainer } | ForEach-Object {
-        $Link = Join-Path -Path $HOME -ChildPath $_.Name
+        $Link = [System.IO.Path]::Combine($HOME, $_.Name)
         $Target = $_
 
         if (Test-Path $Link) {

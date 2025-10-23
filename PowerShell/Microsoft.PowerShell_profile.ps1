@@ -1,6 +1,6 @@
-. (Join-Path $PSScriptRoot "terminal.ps1")
-. (Join-Path $PSScriptRoot "utilities.ps1")
-. (Join-Path $PSScriptRoot "sandbox.ps1")
+. ([System.IO.Path]::Combine($PSScriptRoot, "terminal.ps1"))
+. ([System.IO.Path]::Combine($PSScriptRoot, "utilities.ps1"))
+. ([System.IO.Path]::Combine($PSScriptRoot, "sandbox.ps1"))
 
 if ($host.Name -eq 'Visual Studio Code Host') {
     Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process

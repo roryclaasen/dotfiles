@@ -10,7 +10,7 @@ function Get-SandboxConfig {
         $DefaultTable += @{ "Retail" = "RETAIL" };
     }
 
-    $JsonFile = Join-Path $PSScriptRoot "Sandboxes.json"
+    $JsonFile = [System.IO.Path]::Combine($PSScriptRoot, "Sandboxes.json")
     if (Test-Path $JsonFile) {
         return $DefaultTable + (Get-Content $JsonFile -Raw | ConvertFrom-Json -AsHashtable)
     }
@@ -28,7 +28,7 @@ function Add-SandboxConfig {
         [string]$Sandbox
     )
 
-    $JsonFile = Join-Path $PSScriptRoot "Sandboxes.json"
+    $JsonFile = [System.IO.Path]::Combine($PSScriptRoot, "Sandboxes.json")
     if (Test-Path $JsonFile) {
         $SandboxMap = Get-Content $JsonFile -Raw | ConvertFrom-Json -AsHashtable
     }
@@ -49,7 +49,7 @@ function Get-XblPCSandboxCommand {
 
     $GDKPath = $env:GameDK
     if (-not [string]::IsNullOrWhiteSpace($GDKPath)) {
-        $ExePath = Join-Path $GDKPath "bin\XblPCSandbox.exe"
+        $ExePath = [System.IO.Path]::Combine($GDKPath, "bin", "XblPCSandbox.exe")
         if (Test-Path $ExePath) {
             Write-Verbose "Found '$ExePath' via GameDK environment variable"
             return $ExePath
@@ -60,7 +60,7 @@ function Get-XblPCSandboxCommand {
         $GDKInstallRoots = Get-ItemProperty -Path "hklm:\software\microsoft\GDK\Installed Roots"
         $GDKPath = $GDKInstallRoots.GDKInstallPath
         if (-not [string]::IsNullOrWhiteSpace($GDKPath)) {
-            $ExePath = Join-Path $GDKPath "bin\XblPCSandbox.exe"
+            $ExePath = [System.IO.Path]::Combine($GDKPath, "bin", "XblPCSandbox.exe")
             if (Test-Path $ExePath) {
                 Write-Verbose "Found '$ExePath' via registry"
                 return $ExePath
