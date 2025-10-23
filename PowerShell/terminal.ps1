@@ -8,34 +8,17 @@ else {
     }
 }
 
-if (Get-Module -ListAvailable -Name posh-git) {
-    Import-Module -Name posh-git
-}
+try { Import-Module -Name posh-git } catch [System.Management.Automation.CommandNotFoundException] { }
+try { Import-Module -Name Terminal-Icons } catch [System.Management.Automation.CommandNotFoundException] { }
+try { Import-Module -Name PSFzf -ArgumentList 'Ctrl+t', 'Ctrl+r' } catch [System.Management.Automation.CommandNotFoundException] { }
+try { Import-Module -Name z } catch [System.Management.Automation.CommandNotFoundException] { }
+try { Import-Module -Name Microsoft.WinGet.Client } catch [System.Management.Automation.CommandNotFoundException] { }
+try { Import-Module -Name Microsoft.WinGet.CommandNotFound } catch [System.Management.Automation.CommandNotFoundException] { }
 
-if (Get-Module -ListAvailable -Name Terminal-Icons) {
-    Import-Module -Name Terminal-Icons
-}
-
-if ((Get-Module -ListAvailable -Name PSFzf) -And (Get-Command "Fzf.exe" -ErrorAction SilentlyContinue)) {
-    Import-Module -Name PSFzf -ArgumentList 'Ctrl+t', 'Ctrl+r'
-}
-
-if (Get-Module -ListAvailable -Name z) {
-    Import-Module -Name z
-}
-
-if (Get-Module -ListAvailable -Name Microsoft.WinGet.Client) {
-    Import-Module -Name Microsoft.WinGet.Client
-}
-
-if (Get-Module -ListAvailable -Name Microsoft.WinGet.CommandNotFound) {
-    Import-Module -Name Microsoft.WinGet.CommandNotFound
-}
-
-if (Get-Module -ListAvailable -Name gsudoModule) {
+try {
     Import-Module -Name gsudoModule
     Set-Alias 'sudo' 'gsudo'
-}
+} catch [System.Management.Automation.CommandNotFoundException] { }
 
 if (Get-Command "fnm.exe" -ErrorAction SilentlyContinue) {
     fnm env --use-on-cd --shell power-shell | Out-String | Invoke-Expression
