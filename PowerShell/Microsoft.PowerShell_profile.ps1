@@ -73,7 +73,9 @@ function prompt {
     },
     {
         # Fzf
-        try { Import-Module -Name PSFzf -ArgumentList 'Ctrl+t', 'Ctrl+r' } catch [System.Management.Automation.CommandNotFoundException] { }
+        if (Get-Command "Fzf.exe" -ErrorAction SilentlyContinue) {
+            try { Import-Module -Name PSFzf -ArgumentList 'Ctrl+t', 'Ctrl+r' } catch [System.Management.Automation.CommandNotFoundException] { }
+        }
     },
     {
         # z
