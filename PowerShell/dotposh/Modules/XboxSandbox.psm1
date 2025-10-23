@@ -1,3 +1,14 @@
+function Get-ConfigFilePath {
+    $FileName = "Sandboxes.json"
+
+    $JsonFile = [System.IO.Path]::Combine($PSScriptRoot, $FileName)
+    if (Test-Path $JsonFile) {
+        return $JsonFile
+    }
+
+    return [System.IO.Path]::Combine($env:DOTPOSH, $FileName)
+}
+
 function Get-SandboxConfig {
     [CmdletBinding()]
     param(
@@ -10,7 +21,7 @@ function Get-SandboxConfig {
         $DefaultTable += @{ "Retail" = "RETAIL" };
     }
 
-    $JsonFile = [System.IO.Path]::Combine($PSScriptRoot, "Sandboxes.json")
+    $JsonFile = Get-ConfigFilePath
     if (Test-Path $JsonFile) {
         return $DefaultTable + (Get-Content $JsonFile -Raw | ConvertFrom-Json -AsHashtable)
     }
@@ -28,7 +39,7 @@ function Add-SandboxConfig {
         [string]$Sandbox
     )
 
-    $JsonFile = [System.IO.Path]::Combine($PSScriptRoot, "Sandboxes.json")
+    $JsonFile = Get-ConfigFilePath
     if (Test-Path $JsonFile) {
         $SandboxMap = Get-Content $JsonFile -Raw | ConvertFrom-Json -AsHashtable
     }
@@ -196,4 +207,9 @@ Register-ArgumentCompleter -CommandName Set-Sandbox -ParameterName Sandbox -Scri
     return ($SandboxMap.Keys + $SandboxMap.Values) | Sort-Object -Unique | Where-Object { $_ -like "$stringMatch*" }
 }
 
-Set-Alias -Name sandbox -Value Set-Sandbox
+Set-Alias -Name 'sandbox' -Value 'Set-Sandbox'
+
+Export-ModuleMember -Function Get-SandboxConfig
+Export-ModuleMember -Function Add-SandboxConfig
+Export-ModuleMember -Function Get-Sandbox
+Export-ModuleMember -Function Set-Sandbox

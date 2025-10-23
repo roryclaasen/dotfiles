@@ -1,17 +1,14 @@
 # Ignore Everything
 *
 
-# Powershell Scripts
-!profile.ps1
+# Config Files
+!.gitignore
+
+# Powershell Files
+!powershell.config.json
 !Microsoft.PowerShell_*.ps1
 !Microsoft.VSCode_profile.ps1
 
-!terminal.ps1
-!utilities.ps1
-!sandbox.ps1
-
-# Config Files
-!.gitignore
-!roryclaasen.omp.json
-!powershell.config.json
-!starship.toml
+# DotPosh
+!dotposh/
+!dotposh/**
