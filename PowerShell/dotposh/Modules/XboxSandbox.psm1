@@ -207,9 +207,9 @@ Register-ArgumentCompleter -CommandName Set-Sandbox -ParameterName Sandbox -Scri
     return ($SandboxMap.Keys + $SandboxMap.Values) | Sort-Object -Unique | Where-Object { $_ -like "$stringMatch*" }
 }
 
-Set-Alias -Name 'sandbox' -Value 'Set-Sandbox'
-
 Export-ModuleMember -Function Get-SandboxConfig
 Export-ModuleMember -Function Add-SandboxConfig
 Export-ModuleMember -Function Get-Sandbox
 Export-ModuleMember -Function Set-Sandbox
+
+Set-Alias -Name 'sandbox' -Value 'Set-Sandbox'
