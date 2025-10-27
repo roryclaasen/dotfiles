@@ -129,12 +129,6 @@ function Set-Sandbox {
         [Parameter(Mandatory = $true, HelpMessage = "The sandbox to switch to.")]
         [string]$Sandbox
     )
-
-    if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
-        Write-Error "You must run this cmdlet as an administrator."
-        break
-    }
-
     $SandboxMap = Get-SandboxConfig -IncludeRetail
 
     $NewSandbox = $Sandbox
@@ -145,6 +139,11 @@ function Set-Sandbox {
     $CurrentSandbox = Get-Sandbox
     if ($CurrentSandbox -eq $NewSandbox) {
         Write-Host "Already in sandbox $NewSandbox"
+        break
+    }
+
+    if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+        Write-Error "You must run this cmdlet as an administrator."
         break
     }
 
