@@ -51,6 +51,21 @@ function Add-SandboxConfig {
     $SandboxMap | ConvertTo-Json | Set-Content $JsonFile
 }
 
+function Restart-ServiceFunc {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ServiceName
+    )
+
+    $service = Get-Service -Name $ServiceName
+    if ($service.Status -eq "Running") {
+        Write-Host "Stopping $ServiceName"
+        $service | Stop-Service -Force
+    }
+    Write-Host "Starting $ServiceName"
+    $service | Start-Service
+}
+
 function Get-XblPCSandboxCommand {
     $ExePath = Get-Command XblPCSandbox.exe -ErrorAction SilentlyContinue
     if ($ExePath) {
@@ -158,21 +173,6 @@ function Set-Sandbox {
         }
         else {
             Set-ItemProperty -Path "hklm:\software\microsoft\XboxLive" -Name Sandbox -Value $NewSandbox
-        }
-
-        function Restart-ServiceFunc {
-            param(
-                [Parameter(Mandatory = $true)]
-                [string]$ServiceName
-            )
-
-            $service = Get-Service -Name $ServiceName
-            if ($service.Status -eq "Running") {
-                Write-Host "Stopping $ServiceName"
-                $service | Stop-Service -Force
-            }
-            Write-Host "Starting $ServiceName"
-            $service | Start-Service
         }
 
         Restart-ServiceFunc "XblAuthManager"
