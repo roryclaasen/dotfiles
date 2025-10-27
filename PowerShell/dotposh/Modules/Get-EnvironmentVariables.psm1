@@ -35,3 +35,4 @@ function Get-EnvironmentVariables {
 Set-Alias 'Get-Env' 'Get-EnvironmentVariables'
 
 Export-ModuleMember -Function Get-EnvironmentVariables
+Export-ModuleMember -Alias 'Get-Env'

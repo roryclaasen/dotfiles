@@ -7,6 +7,7 @@ function downloads { Set-Location $env:USERPROFILE\Downloads }
 function HKLM { Set-Location HKLM: }
 function HKCU { Set-Location HKCU: }
 
+
 # Network
 function flushdns { ipconfig /flushdns }
 function displaydns { ipconfig /displaydns }
@@ -32,13 +33,16 @@ function Invoke-ProfileReload {
 Set-Alias "Reload-Profile" Invoke-ProfileReload
 Set-Alias "reload" Invoke-ProfileReload
 
+
+# Gsudo
+Set-Alias 'sudo' 'gsudo'
+
+
 # Windows System
 function paths { $env:PATH -Split ';' }
 function envs { Get-ChildItem Env: }
 function profiles { Get-PSProfile { $_.exists -eq "True" } | Format-List }
 
-# Gsudo
-Set-Alias 'sudo' 'gsudo'
 
 # Terminal
 function colors {

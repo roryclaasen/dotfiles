@@ -11,3 +11,4 @@ function ConvertTo-Base64 {
 Set-Alias 'base64' 'ConvertTo-Base64'
 
 Export-ModuleMember -Function ConvertTo-Base64
+Export-ModuleMember -Alias 'base64'
