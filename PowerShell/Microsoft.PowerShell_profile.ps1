@@ -113,7 +113,10 @@ Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -SupportEvent -Action {
     else {
         Unregister-Event -SubscriptionId $EventSubscriber.SubscriptionId -Force
         Remove-Variable -Name '__initQueue' -Scope Global -Force
-        [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
+
+        if ($LazyLoadOhMyPosh) {
+            [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
+        }
     }
 }
 
