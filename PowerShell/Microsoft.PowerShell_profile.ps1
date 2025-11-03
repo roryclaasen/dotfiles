@@ -9,6 +9,12 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
+# Non Interactive Check
+# -----------------------------------------------------------------------------------------
+if ([Environment]::GetCommandLineArgs().Contains('-NonInteractive')) {
+    return
+}
+
 # Environment Variables
 # -----------------------------------------------------------------------------------------
 
@@ -47,10 +53,6 @@ function prompt {
 [System.Collections.Queue]$__initQueue = @(
     {
         # Oh My Posh
-        if ([Environment]::GetCommandLineArgs().Contains("-NonInteractive")) {
-            return
-        }
-
         if ($env:PG_ENVIRONMENT -eq 1) {
             return
         }
