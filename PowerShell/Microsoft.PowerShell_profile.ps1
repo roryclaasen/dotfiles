@@ -95,6 +95,10 @@ function prompt {
         }
     },
     {
+        # Docker Auto Completion
+        try { Import-Module -Name DockerCompletion } catch [System.Management.Automation.CommandNotFoundException] { }
+    },
+    {
         # Secret Management
         try { Import-Module -Name Microsoft.PowerShell.SecretManagement } catch [System.Management.Automation.CommandNotFoundException] { }
         try { Import-Module -Name Microsoft.PowerShell.SecretStore } catch [System.Management.Automation.CommandNotFoundException] { }
