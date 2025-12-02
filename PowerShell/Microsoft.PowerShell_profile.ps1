@@ -29,24 +29,25 @@ $LazyLoadOhMyPosh = $false
 # Asynchronous Processes (Boost PowerShell performance)
 # Original idea is from: https://matt.kotsenas.com/posts/pwsh-profiling-async-startup
 # -----------------------------------------------------------------------------------------
+if ($env:PG_ENVIRONMENT -ne 1) {
+    function prompt {
+        # oh-my-posh will override this prompt, however because we're loading it async we want to communicate that the
+        # real prompt is still loading.
+        # "[async]:: $($executionContext.SessionState.Path.CurrentLocation) :: $(Get-Date -Format "HH:mm tt") $('❯' * ($nestedPromptLevel + 1)) "
 
-function prompt {
-    # oh-my-posh will override this prompt, however because we're loading it async we want to communicate that the
-    # real prompt is still loading.
-    # "[async]:: $($executionContext.SessionState.Path.CurrentLocation) :: $(Get-Date -Format "HH:mm tt") $('❯' * ($nestedPromptLevel + 1)) "
+        $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+        $principal = [Security.Principal.WindowsPrincipal] $identity
+        $adminRole = [Security.Principal.WindowsBuiltInRole]::Administrator
 
-    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $principal = [Security.Principal.WindowsPrincipal] $identity
-    $adminRole = [Security.Principal.WindowsBuiltInRole]::Administrator
+        $prefix = "[async]::"
+        if ($principal.IsInRole($adminRole)) { $prefix = "[async][admin]::" }
 
-    $prefix = "[async]::"
-    if ($principal.IsInRole($adminRole)) { $prefix = "[async][admin]::" }
+        $body = 'PS ' + $PWD.path
+        $suffix = $(if ($NestedPromptLevel -ge 1) { '❯❯ ' }) + '❯ '
+        $time = $(Get-Date -Format "HH:mm tt")
 
-    $body = 'PS ' + $PWD.path
-    $suffix = $(if ($NestedPromptLevel -ge 1) { '❯❯ ' }) + '❯ '
-    $time = $(Get-Date -Format "HH:mm tt")
-
-    "${prefix}${body} ${time} ${suffix}"
+        "${prefix}${body} ${time} ${suffix}"
+    }
 }
 
 # Load modules asynchronously to reduce shell startup time
