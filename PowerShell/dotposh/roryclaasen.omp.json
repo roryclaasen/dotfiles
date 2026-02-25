@@ -37,6 +37,7 @@
         },
         {
           "type": "git",
+          "streaming": 100,
           "style": "plain",
           "options": {
             "fetch_status": true,
