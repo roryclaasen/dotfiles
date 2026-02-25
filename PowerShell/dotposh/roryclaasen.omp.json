@@ -25,21 +25,20 @@
       "alignment": "left",
       "segments": [
         {
+          "type": "text",
           "style": "plain",
-          "template": "<p:block>┏</>",
-          "type": "text"
+          "template": "<p:block>┏</>"
         },
         {
+          "type": "session",
           "style": "plain",
           "template": "<p:block>[</>{{ .UserName }}<p:block>]</>",
-          "foreground": "p:foreground",
-          "type": "session"
+          "foreground": "p:foreground"
         },
         {
-          "style": "plain",
-          "foreground": "p:foreground",
           "type": "git",
-          "properties": {
+          "style": "plain",
+          "options": {
             "fetch_status": true,
             "fetch_upstream_icon": true,
             "source": "cli",
@@ -48,6 +47,7 @@
             "branch_behind_icon": "⇣",
             "branch_ahead_icon": "⇡"
           },
+          "foreground": "p:foreground",
           "templates": [
             "<p:block>-[</>",
             "{{ url .UpstreamIcon .UpstreamURL }} ",
@@ -60,66 +60,66 @@
           ]
         },
         {
+          "type": "root",
           "style": "plain",
           "template": "<p:block>-[</><p:block>]</>",
-          "foreground": "yellow",
-          "type": "root"
+          "foreground": "yellow"
         },
         {
+          "type": "status",
           "style": "plain",
           "template": "<p:block>-[</>x{{ .Meaning }}<p:block>]</>",
-          "foreground": "p:foreground",
-          "type": "status"
+          "foreground": "p:foreground"
         },
         {
-          "properties": {
+          "type": "executiontime",
+          "style": "plain",
+          "options": {
             "style": "roundrock",
             "threshold": 0
           },
-          "style": "plain",
-          "template": "<p:block>-[</>  {{ .FormattedMs }}<p:block>]</>",
           "foreground": "p:foreground",
-          "type": "executiontime"
+          "template": "<p:block>-[</>  {{ .FormattedMs }}<p:block>]</>"
         },
         {
+          "type": "dotnet",
           "style": "plain",
-          "template": "<p:block>-[</> {{ .Full }}<p:block>]</>",
           "foreground": "#b915ff",
-          "type": "dotnet"
+          "template": "<p:block>-[</> {{ .Full }}<p:block>]</>"
         },
         {
+          "type": "java",
           "style": "plain",
-          "template": "<p:block>-[</> {{ .Full }}<p:block>]</>",
           "foreground": "#f6901d",
-          "type": "java"
+          "template": "<p:block>-[</> {{ .Full }}<p:block>]</>"
         },
         {
+          "type": "node",
           "style": "plain",
-          "template": "<p:block>-[</>󰎙 {{ .Full }}<p:block>]</>",
           "foreground": "#709d53",
-          "type": "node"
+          "template": "<p:block>-[</>󰎙 {{ .Full }}<p:block>]</>"
         },
         {
+          "type": "python",
           "style": "plain",
-          "template": "<p:block>-[</> {{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}<p:block>]</>",
           "foreground": "#906cff",
-          "type": "python"
+          "template": "<p:block>-[</> {{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}<p:block>]</>"
         },
         {
+          "type": "docker",
           "style": "plain",
-          "template": "<p:block>-[</> {{ .Context  }}<p:block>]</>",
           "foreground": "#1c90ed",
-          "type": "docker"
+          "template": "<p:block>-[</> {{ .Context  }}<p:block>]</>"
         },
         {
-          "style": "plain",
           "type": "winreg",
-          "template": "{{ if .Var.ShowSandbox }}<p:block>-[</> {{ .Value }}<p:block>]</>{{ end }}",
-          "foreground": "#14a314",
-          "properties": {
+          "style": "plain",
+          "options": {
             "path": "HKLM\\SOFTWARE\\Microsoft\\XboxLive\\Sandbox",
             "fallback": "RETAIL"
-          }
+          },
+          "foreground": "#14a314",
+          "template": "{{ if .Var.ShowSandbox }}<p:block>-[</> {{ .Value }}<p:block>]</>{{ end }}"
         }
       ]
     },
@@ -128,18 +128,18 @@
       "alignment": "left",
       "segments": [
         {
+          "type": "text",
           "style": "plain",
-          "template": "<p:block>┖</>",
-          "type": "text"
+          "template": "<p:block>┖</>"
         },
         {
-          "properties": {
+          "type": "path",
+          "style": "plain",
+          "options": {
             "style": "full"
           },
-          "style": "plain",
-          "template": "<p:block>[</>{{ .Path }}<p:block>]</>",
           "foreground": "p:foreground",
-          "type": "path"
+          "template": "<p:block>[</>{{ .Path }}<p:block>]</>"
         }
       ],
       "newline": true
@@ -149,18 +149,19 @@
       "alignment": "left",
       "segments": [
         {
-          "properties": {
+          "type": "status",
+          "style": "plain",
+          "options": {
             "always_enabled": true
           },
-          "style": "plain",
           "template": "$",
           "foreground": "p:foreground",
-          "type": "status",
           "foreground_templates": [
             "{{ if gt .Code 0 }}p:error{{ end }}"
           ]
         }
       ],
+      "force": true,
       "newline": true
     }
   ],
