@@ -75,25 +75,25 @@
     renames = copies
     # mnemonicprefix = true
     compactionHeuristic = true
-    # tool = code
+    # tool = vscode
 
 [difftool]
     prompt = false
     trustExitCode = true
     keepBackup = false
 
-[difftool "code"]
+[difftool "vscode"]
     cmd = code --wait --diff $LOCAL $REMOTE
 
 [merge]
-    # tool = code
+    # tool = vscode
 
 [mergetool]
     prompt = false
     trustExitCode = true
     keepBackup = false
 
-[mergetool "code"]
+[mergetool "vscode"]
   cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
 
 [alias]
