@@ -24,12 +24,13 @@ $env:POSH_THEME = [System.IO.Path]::Combine($env:DOTPOSH, "roryclaasen.omp.json"
 
 # Oh My Posh
 # -----------------------------------------------------------------------------------------
+$EnableOhMyPosh = $env:PG_ENVIRONMENT -ne 1
 $LazyLoadOhMyPosh = $false
 
 # Asynchronous Processes (Boost PowerShell performance)
 # Original idea is from: https://matt.kotsenas.com/posts/pwsh-profiling-async-startup
 # -----------------------------------------------------------------------------------------
-if ($env:PG_ENVIRONMENT -ne 1) {
+if ($EnableOhMyPosh -and $LazyLoadOhMyPosh) {
     function prompt {
         # oh-my-posh will override this prompt, however because we're loading it async we want to communicate that the
         # real prompt is still loading.
@@ -54,11 +55,7 @@ if ($env:PG_ENVIRONMENT -ne 1) {
 [System.Collections.Queue]$__initQueue = @(
     {
         # Oh My Posh
-        if ($env:PG_ENVIRONMENT -eq 1) {
-            return
-        }
-
-        if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
+        if ($EnableOhMyPosh -and (Get-Command oh-my-posh -ErrorAction SilentlyContinue)) {
             oh-my-posh init pwsh --config $env:POSH_THEME | Invoke-Expression
         }
     },
