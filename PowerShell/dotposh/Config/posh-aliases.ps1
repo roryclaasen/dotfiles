@@ -14,6 +14,7 @@ function displaydns { ipconfig /displaydns }
 function chrome { Start-Process chrome }
 function edge { Start-Process microsoft-edge: }
 
+function gdk { Set-Location $env:GameDK\bin }
 
 # PowerShell reload /restart
 function Invoke-ProfileReload {
@@ -39,7 +40,7 @@ Set-Alias 'sudo' 'gsudo'
 
 
 # Windows System
-function paths { $env:PATH -Split ';' }
+function paths { $env:PATH -Split ';' | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne ""} | Sort-Object | Format-List }
 function envs { Get-ChildItem Env: }
 function profiles { Get-PSProfile { $_.exists -eq "True" } | Format-List }
 
