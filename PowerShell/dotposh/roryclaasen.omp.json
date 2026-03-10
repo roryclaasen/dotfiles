@@ -36,6 +36,12 @@
           "foreground": "p:foreground"
         },
         {
+          "type": "text",
+          "style": "plain",
+          "template": "{{ if .Env.DOT_LOADING }}<p:block>-[</><f>󱗿</f><p:block>]</>{{ end }}",
+          "foreground": "p:root"
+        },
+        {
           "type": "git",
           "streaming": 100,
           "style": "plain",

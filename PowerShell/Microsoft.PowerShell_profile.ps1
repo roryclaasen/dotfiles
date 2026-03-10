@@ -22,6 +22,8 @@ $env:DOTFILES = [System.IO.Path]::Combine($HOME, "dotfiles")
 $env:DOTPOSH = [System.IO.Path]::Combine($PSScriptRoot, "dotposh")
 $env:POSH_THEME = [System.IO.Path]::Combine($env:DOTPOSH, "roryclaasen.omp.json")
 
+$env:DOT_LOADING = $true
+
 # Oh My Posh
 # -----------------------------------------------------------------------------------------
 $EnableOhMyPosh = $env:PG_ENVIRONMENT -ne 1
@@ -134,6 +136,9 @@ Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -SupportEvent -Action {
     else {
         Unregister-Event -SubscriptionId $EventSubscriber.SubscriptionId -Force
         Remove-Variable -Name '__initQueue' -Scope Global -Force
+
+        $env:DOT_LOADING = $false
+        Remove-Item Env:DOT_LOADING -ErrorAction SilentlyContinue
 
         if ($LazyLoadOhMyPosh) {
             [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
