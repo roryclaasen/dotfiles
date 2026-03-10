@@ -5,11 +5,15 @@
   },
   "palette": {
     "block": "darkGray",
-    "block-dir": "green",
     "error": "red",
     "foreground": "#88c0d0",
-    "foreground-misc": "#d8dee9",
-    "root": "lightYellow"
+    "root": "lightYellow",
+    "dotnet": "#b915ff",
+    "java": "#f6901d",
+    "node": "#709d53",
+    "python": "#906cff",
+    "docker": "#1c90ed",
+    "xbox": "#14a314"
   },
   "debug_prompt": {
     "foreground": "p:foreground"
@@ -91,31 +95,31 @@
         {
           "type": "dotnet",
           "style": "plain",
-          "foreground": "#b915ff",
+          "foreground": "p:dotnet",
           "template": "<p:block>-[</> {{ .Full }}<p:block>]</>"
         },
         {
           "type": "java",
           "style": "plain",
-          "foreground": "#f6901d",
+          "foreground": "p:java",
           "template": "<p:block>-[</> {{ .Full }}<p:block>]</>"
         },
         {
           "type": "node",
           "style": "plain",
-          "foreground": "#709d53",
+          "foreground": "p:node",
           "template": "<p:block>-[</>󰎙 {{ .Full }}<p:block>]</>"
         },
         {
           "type": "python",
           "style": "plain",
-          "foreground": "#906cff",
+          "foreground": "p:python",
           "template": "<p:block>-[</> {{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}<p:block>]</>"
         },
         {
           "type": "docker",
           "style": "plain",
-          "foreground": "#1c90ed",
+          "foreground": "p:docker",
           "template": "<p:block>-[</> {{ .Context  }}<p:block>]</>"
         },
         {
@@ -125,7 +129,7 @@
             "path": "HKLM\\SOFTWARE\\Microsoft\\XboxLive\\Sandbox",
             "fallback": "RETAIL"
           },
-          "foreground": "#14a314",
+          "foreground": "p:xbox",
           "template": "{{ if .Var.ShowSandbox }}<p:block>-[</> {{ .Value }}<p:block>]</>{{ end }}"
         }
       ]
