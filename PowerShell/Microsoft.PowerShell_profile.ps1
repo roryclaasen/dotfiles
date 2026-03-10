@@ -87,6 +87,12 @@ if ($EnableOhMyPosh -and $LazyLoadOhMyPosh) {
         try { Import-Module -Name Microsoft.WinGet.CommandNotFound } catch [System.Management.Automation.CommandNotFoundException] { }
     },
     {
+        # Dotnet Auto Completion
+        if (Get-Command "dotnet.exe" -ErrorAction SilentlyContinue) {
+            dotnet completions script pwsh | Out-String | Invoke-Expression
+        }
+    },
+    {
         # Fast Node Manager
         if (Get-Command "fnm.exe" -ErrorAction SilentlyContinue) {
             fnm env --use-on-cd --shell power-shell | Out-String | Invoke-Expression
