@@ -75,7 +75,7 @@ if ($EnableOhMyPosh -and $LazyLoadOhMyPosh) {
     },
     {
         # Fzf
-        if (Get-Command "Fzf.exe" -ErrorAction SilentlyContinue) {
+        if (Get-Command Fzf -ErrorAction SilentlyContinue) {
             try { Import-Module -Name PSFzf -ArgumentList 'Ctrl+t', 'Ctrl+r' } catch [System.Management.Automation.CommandNotFoundException] { }
         }
     },
@@ -90,13 +90,13 @@ if ($EnableOhMyPosh -and $LazyLoadOhMyPosh) {
     },
     {
         # Dotnet Auto Completion
-        if (Get-Command "dotnet.exe" -ErrorAction SilentlyContinue) {
+        if (Get-Command dotnet -ErrorAction SilentlyContinue) {
             dotnet completions script pwsh | Out-String | Invoke-Expression
         }
     },
     {
         # Fast Node Manager
-        if (Get-Command "fnm.exe" -ErrorAction SilentlyContinue) {
+        if (Get-Command fnm -ErrorAction SilentlyContinue) {
             fnm env --use-on-cd --shell power-shell | Out-String | Invoke-Expression
         }
     },
@@ -112,8 +112,7 @@ if ($EnableOhMyPosh -and $LazyLoadOhMyPosh) {
     {
         # GitHub CLI
         if (Get-Command gh -ErrorAction SilentlyContinue) {
-            # gh completion
-            Invoke-Expression -Command $(gh completion -s powershell | Out-String)
+            gh completion -s powershell | Out-String | Invoke-Expression
         }
     },
     {
