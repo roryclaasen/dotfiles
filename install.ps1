@@ -17,12 +17,12 @@ param(
     [switch]$GSudo = $false
 )
 
-$IsCodespace = $env:CODESPACES -eq $true
+$IsCodespace = -not [string]::IsNullOrWhiteSpace($env:CODESPACES)
 
 function Install-WinGetTools {
     if (-not (Get-Command "winget" -ErrorAction SilentlyContinue)) {
         Write-Warning "[+] Windows Package Manager not installed. Skipping..."
-        break;
+        return
     }
 
     Write-Host "[+] Importing Windows Package Manager config..."
@@ -48,7 +48,7 @@ function Install-PSRequirements {
 
     $Requirements = @(
         'posh-git',
-        'Terminal-Icons'
+        'Terminal-Icons',
         'PSFzf',
         'z',
         'Microsoft.WinGet.Client'
@@ -104,21 +104,27 @@ function Install-DotFiles {
         )
     }
 
-    $Dotfiles | Get-ChildItem -Force | Where-Object { -not $_.PSisContainer } | ForEach-Object {
-        $Link = [System.IO.Path]::Combine($HOME, $_.Name)
-        $Target = $_
+    foreach ($dotfile in $Dotfiles) {
+        $Target = [System.IO.Path]::Combine($PSScriptRoot, $dotfile)
+        if (-not (Test-Path -LiteralPath $Target)) {
+            Write-Warning "Missing dotfile target '$Target'. Skipping."
+            continue
+        }
+
+        $targetItem = Get-Item -LiteralPath $Target -Force
+        $Link = [System.IO.Path]::Combine($HOME, $targetItem.Name)
 
         if (Test-Path $Link) {
             $LinkProperties = Get-ItemProperty $Link;
             if (-not $LinkProperties.LinkType) {
                 Write-Warning "$Link is not a link. Will not overwrite"
             }
-            elseif ($LinkProperties.Target -ne $Target) {
+            elseif ($LinkProperties.Target -ne $targetItem.FullName) {
                 Write-Warning "$Link link already exists, but points to a different location. Will not overwrite."
             }
         }
         else {
-            New-Item -ItemType SymbolicLink -Path $Link -Target $Target | Out-Null
+            New-Item -ItemType SymbolicLink -Path $Link -Target $targetItem.FullName | Out-Null
         }
     }
 }
@@ -126,36 +132,36 @@ function Install-DotFiles {
 function Install-GSudo {
     if ($IsWindows -eq $false) {
         Write-Warning "gsudo is only available on Windows. Skipping..."
-        break;
+        return
     }
 
     if (-not (Get-Command "gsudo" -ErrorAction SilentlyContinue)) {
         Write-Warning "[+] Gsudo not installed. If gsudo got installed via Install-WinGetTools it may not yet be available. Skipping..."
-        break;
+        return
     }
 
     Write-Host "[+] Configuring gsudo..."
     gsudo config PowerShellLoadProfile true
 }
 
-if ($IsWindows) {
-    if ($PsCmdlet.ParameterSetName -eq "Picky" -and $WinGet) {
-        Install-WinGetTools
-    }
+$InstallAll = $PsCmdlet.ParameterSetName -ne "Picky"
+
+if ($IsWindows -and ($InstallAll -or $WinGet)) {
+    Install-WinGetTools
 }
 
-if ($PsCmdlet.ParameterSetName -eq "Picky" -and $PSProfile) {
+if ($InstallAll -or $PSProfile) {
     Install-PSProfile
 }
 
-if ($PsCmdlet.ParameterSetName -eq "Picky" -and $PSRequirements) {
+if ($InstallAll -or $PSRequirements) {
     Install-PSRequirements
 }
 
-if ($PsCmdlet.ParameterSetName -eq "Picky" -and $DotFiles) {
+if ($InstallAll -or $DotFiles) {
     Install-DotFiles
 }
 
-if ($PsCmdlet.ParameterSetName -eq "Picky" -and $GSudo) {
+if ($IsWindows -and ($InstallAll -or $GSudo)) {
     Install-GSudo
 }
