@@ -22,32 +22,103 @@ param(
 
 $IsCodespace = -not [string]::IsNullOrWhiteSpace($env:CODESPACES)
 
+function Ensure-PSGalleryTrusted {
+    $repo = Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue
+    if ($null -eq $repo) {
+        Write-Warning "[+] PSGallery repository is not available. Skipping repository policy update."
+        return
+    }
+
+    if ($repo.InstallationPolicy -ne 'Trusted') {
+        Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+    }
+}
+
+function Install-ModuleIfMissing {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Name
+    )
+
+    if (Get-Module -ListAvailable -Name $Name) {
+        Write-Host "[=] PowerShell module '$Name' already installed. Skipping."
+        return
+    }
+
+    Write-Host "[+] Installing PowerShell module '$Name'..."
+    PowerShellGet\Install-Module $Name -Scope CurrentUser -Force
+}
+
+function Test-IsPathLinkedToTarget {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path,
+        [Parameter(Mandatory = $true)]
+        [string]$ExpectedTarget
+    )
+
+    if (-not (Test-Path -LiteralPath $Path)) {
+        return $false
+    }
+
+    $item = Get-Item -LiteralPath $Path -Force
+    $isLink = -not [string]::IsNullOrWhiteSpace($item.LinkType)
+    if (-not $isLink) {
+        return $false
+    }
+
+    $target = if ($item.Target -is [System.Array]) {
+        [string]::Join(', ', $item.Target)
+    }
+    else {
+        [string]$item.Target
+    }
+
+    return $target -eq $ExpectedTarget
+}
+
+function Test-WinGetPackageInstalled {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$PackageIdentifier
+    )
+
+    $output = winget list --id $PackageIdentifier --exact --accept-source-agreements 2>$null
+    return $LASTEXITCODE -eq 0 -and ($output -match [regex]::Escape($PackageIdentifier))
+}
+
 function Install-WinGetTools {
     if (-not (Get-Command "winget" -ErrorAction SilentlyContinue)) {
         Write-Warning "[+] Windows Package Manager not installed. Skipping..."
         return
     }
 
-    Write-Host "[+] Importing Windows Package Manager config..."
+    Write-Host "[+] Ensuring Windows Package Manager tools from config..."
     $fileConfig = [System.IO.Path]::Combine($PSScriptRoot, "winget.json")
 
-    $wingetImportOptions = @(
-        $fileConfig,
-        '--ignore-unavailable',
-        '--disable-interactivity',
-        '--accept-package-agreements',
-        '--accept-source-agreements'
-        # '--no-upgrade'
-    )
+    if (-not (Test-Path -LiteralPath $fileConfig)) {
+        Write-Warning "[+] Missing winget config '$fileConfig'. Skipping..."
+        return
+    }
 
-    winget import $wingetImportOptions
+    $wingetConfig = Get-Content -LiteralPath $fileConfig -Raw | ConvertFrom-Json
+    $packageIds = @($wingetConfig.Sources.Packages.PackageIdentifier | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+
+    foreach ($packageId in $packageIds) {
+        if (Test-WinGetPackageInstalled -PackageIdentifier $packageId) {
+            Write-Host "[=] WinGet package '$packageId' already installed. Skipping."
+            continue
+        }
+
+        Write-Host "[+] Installing WinGet package '$packageId'..."
+        winget install --id $packageId --exact --disable-interactivity --accept-package-agreements --accept-source-agreements
+    }
 }
 
 function Install-PSRequirements {
     Write-Host "[+] Installing PowerShell Core Requirements..."
 
-    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-    Install-Module PowerShellGet -Force -AllowClobber
+    Ensure-PSGalleryTrusted
 
     $Requirements = @(
         'posh-git',
@@ -59,21 +130,13 @@ function Install-PSRequirements {
         'gsudoModule'
     )
 
-    $Requirements | ForEach-Object {
-        if (Get-Module -ListAvailable -Name $_) {
-            PowerShellGet\Update-Module $_
-        }
-        else {
-            PowerShellGet\Install-Module $_ -Scope CurrentUser -Force
-        }
-    }
+    $Requirements | ForEach-Object { Install-ModuleIfMissing -Name $_ }
 }
 
 function Install-PSOptionalRequirements {
     Write-Host "[+] Installing PowerShell Optional Requirements..."
 
-    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-    Install-Module PowerShellGet -Force -AllowClobber
+    Ensure-PSGalleryTrusted
 
     $OptionalRequirements = @(
         'DockerCompletion',
@@ -81,20 +144,14 @@ function Install-PSOptionalRequirements {
         'Microsoft.PowerShell.SecretStore'
     )
 
-    $OptionalRequirements | ForEach-Object {
-        if (Get-Module -ListAvailable -Name $_) {
-            PowerShellGet\Update-Module $_
-        }
-        else {
-            PowerShellGet\Install-Module $_ -Scope CurrentUser -Force
-        }
-    }
+    $OptionalRequirements | ForEach-Object { Install-ModuleIfMissing -Name $_ }
 
     if (Get-Command dotnet -ErrorAction SilentlyContinue) {
         if (Get-Command nuke -ErrorAction SilentlyContinue) {
-            dotnet tool update --global Nuke.GlobalTool | Out-Null
+            Write-Host "[=] Nuke.GlobalTool already installed. Skipping."
         }
         else {
+            Write-Host "[+] Installing Nuke.GlobalTool..."
             dotnet tool install --global Nuke.GlobalTool | Out-Null
         }
     }
@@ -109,8 +166,13 @@ function Install-PSProfile {
     $Link = Split-Path $PROFILE.CurrentUserAllHosts
     $Target = [System.IO.Path]::Combine($PSScriptRoot, "PowerShell")
 
-    if (Test-Path $Link) {
-        $LinkProperties = Get-ItemProperty $Link;
+    if (Test-Path -LiteralPath $Link) {
+        if (Test-IsPathLinkedToTarget -Path $Link -ExpectedTarget $Target) {
+            Write-Host "[=] PowerShell profile link already configured. Skipping."
+            return
+        }
+
+        $LinkProperties = Get-ItemProperty $Link
         if (-not $LinkProperties.LinkType) {
             Write-Warning "Powershell Profile directory already exists. Will not overwrite"
         }
@@ -154,6 +216,11 @@ function Install-DotFiles {
         $Link = [System.IO.Path]::Combine($HOME, $targetItem.Name)
 
         if (Test-Path $Link) {
+            if (Test-IsPathLinkedToTarget -Path $Link -ExpectedTarget $targetItem.FullName) {
+                Write-Host "[=] '$Link' already linked correctly. Skipping."
+                continue
+            }
+
             $LinkProperties = Get-ItemProperty $Link;
             if (-not $LinkProperties.LinkType) {
                 Write-Warning "$Link is not a link. Will not overwrite"
