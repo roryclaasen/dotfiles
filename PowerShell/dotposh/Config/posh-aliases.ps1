@@ -7,14 +7,23 @@ function downloads { Set-Location $env:USERPROFILE\Downloads }
 function HKLM { Set-Location HKLM: }
 function HKCU { Set-Location HKCU: }
 
-
-# Network
-function flushdns { ipconfig /flushdns }
-function displaydns { ipconfig /displaydns }
 function chrome { Start-Process chrome }
 function edge { Start-Process microsoft-edge: }
 
 function gdk { Set-Location $env:GameDK\bin }
+
+# Network
+function flushdns { ipconfig /flushdns }
+function displaydns { ipconfig /displaydns }
+function ip {
+    try {
+        return (Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias "Ethernet").IPAddress
+    }
+    catch {
+        return (Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias "Wi-Fi").IPAddress
+    }
+}
+function fqdn { ($env:COMPUTERNAME -and $env:USERDNSDOMAIN) ? "$($env:COMPUTERNAME).$($env:USERDNSDOMAIN)" : $env:COMPUTERNAME }
 
 # PowerShell reload /restart
 function Invoke-ProfileReload {
@@ -40,7 +49,7 @@ Set-Alias 'sudo' 'gsudo'
 
 
 # Windows System
-function paths { $env:PATH -Split ';' | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne ""} | Sort-Object | Format-List }
+function paths { $env:PATH -Split ';' | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" } | Sort-Object | Format-List }
 function envs { Get-ChildItem Env: }
 function profiles { Get-PSProfile { $_.exists -eq "True" } | Format-List }
 
