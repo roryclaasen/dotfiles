@@ -11,6 +11,9 @@ param(
     [switch]$PSRequirements = $false,
 
     [Parameter(Mandatory = $false, ParameterSetName = "Picky")]
+    [switch]$PSOptionalRequirements = $false,
+
+    [Parameter(Mandatory = $false, ParameterSetName = "Picky")]
     [switch]$DotFiles = $false,
 
     [Parameter(Mandatory = $false, ParameterSetName = "Picky")]
@@ -41,7 +44,7 @@ function Install-WinGetTools {
 }
 
 function Install-PSRequirements {
-    Write-Host "[+] Installing PowerShell Requirements..."
+    Write-Host "[+] Installing PowerShell Core Requirements..."
 
     Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
     Install-Module PowerShellGet -Force -AllowClobber
@@ -51,7 +54,9 @@ function Install-PSRequirements {
         'Terminal-Icons',
         'PSFzf',
         'z',
-        'Microsoft.WinGet.Client'
+        'Microsoft.WinGet.Client',
+        'Microsoft.WinGet.CommandNotFound',
+        'gsudoModule'
     )
 
     $Requirements | ForEach-Object {
@@ -61,6 +66,40 @@ function Install-PSRequirements {
         else {
             PowerShellGet\Install-Module $_ -Scope CurrentUser -Force
         }
+    }
+}
+
+function Install-PSOptionalRequirements {
+    Write-Host "[+] Installing PowerShell Optional Requirements..."
+
+    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+    Install-Module PowerShellGet -Force -AllowClobber
+
+    $OptionalRequirements = @(
+        'DockerCompletion',
+        'Microsoft.PowerShell.SecretManagement',
+        'Microsoft.PowerShell.SecretStore'
+    )
+
+    $OptionalRequirements | ForEach-Object {
+        if (Get-Module -ListAvailable -Name $_) {
+            PowerShellGet\Update-Module $_
+        }
+        else {
+            PowerShellGet\Install-Module $_ -Scope CurrentUser -Force
+        }
+    }
+
+    if (Get-Command dotnet -ErrorAction SilentlyContinue) {
+        if (Get-Command nuke -ErrorAction SilentlyContinue) {
+            dotnet tool update --global Nuke.GlobalTool | Out-Null
+        }
+        else {
+            dotnet tool install --global Nuke.GlobalTool | Out-Null
+        }
+    }
+    else {
+        Write-Warning "[+] dotnet is not installed. Skipping Nuke.GlobalTool install."
     }
 }
 
@@ -156,6 +195,10 @@ if ($InstallAll -or $PSProfile) {
 
 if ($InstallAll -or $PSRequirements) {
     Install-PSRequirements
+}
+
+if ($PSOptionalRequirements) {
+    Install-PSOptionalRequirements
 }
 
 if ($InstallAll -or $DotFiles) {

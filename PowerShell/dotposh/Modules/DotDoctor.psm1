@@ -33,7 +33,8 @@ function Invoke-DotDoctor {
         'gh',
         'dotnet',
         'fnm',
-        'fzf'
+        'fzf',
+        'nuke'
     )
 
     $requiredModules = @(
@@ -41,7 +42,12 @@ function Invoke-DotDoctor {
         'Terminal-Icons',
         'PSFzf',
         'z',
-        'Microsoft.WinGet.Client'
+        'Microsoft.WinGet.Client',
+        'Microsoft.WinGet.CommandNotFound',
+        'gsudoModule',
+        'DockerCompletion',
+        'Microsoft.PowerShell.SecretManagement',
+        'Microsoft.PowerShell.SecretStore'
     )
 
     $results.Add([PSCustomObject]@{
