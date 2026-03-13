@@ -16,12 +16,8 @@ function gdk { Set-Location $env:GameDK\bin }
 function flushdns { ipconfig /flushdns }
 function displaydns { ipconfig /displaydns }
 function ip {
-    try {
-        return (Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias "Ethernet").IPAddress
-    }
-    catch {
-        return (Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias "Wi-Fi").IPAddress
-    }
+    $defaultRoute = Get-NetRoute -DestinationPrefix '0.0.0.0/0' | Sort-Object -Property RouteMetric | Select-Object -First 1
+    return (Get-NetIPAddress -InterfaceIndex $defaultRoute.InterfaceIndex -AddressFamily IPv4).IPAddress
 }
 function fqdn { ($env:COMPUTERNAME -and $env:USERDNSDOMAIN) ? "$($env:COMPUTERNAME).$($env:USERDNSDOMAIN)" : $env:COMPUTERNAME }
 
