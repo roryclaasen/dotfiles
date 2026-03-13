@@ -1,10 +1,25 @@
-function Invoke-DotDoctor {
-    [CmdletBinding()]
-    param()
+function New-DotDoctorResult {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Category,
+        [Parameter(Mandatory = $true)]
+        [string]$Name,
+        [Parameter(Mandatory = $true)]
+        [string]$Status,
+        [Parameter(Mandatory = $false)]
+        [string]$Details = ''
+    )
 
-    $results = [System.Collections.Generic.List[object]]::new()
+    return [PSCustomObject]@{
+        Category = $Category
+        Name = $Name
+        Status = $Status
+        Details = $Details
+    }
+}
+
+function Get-DotDoctorContext {
     $isDesktopEdition = $PSVersionTable.PSEdition -eq 'Desktop'
-
     $dotfilesPath = if ([string]::IsNullOrWhiteSpace($env:DOTFILES)) {
         [System.IO.Path]::Combine($HOME, 'dotfiles')
     }
@@ -24,60 +39,70 @@ function Invoke-DotDoctor {
         [System.IO.Path]::Combine($dotfilesPath, 'PowerShell')
     }
 
-    $profileDirectory = Split-Path $PROFILE.CurrentUserAllHosts
-
-    $requiredCommands = @(
-        'git',
-        'oh-my-posh',
-        'winget',
-        'gh',
-        'dotnet',
-        'fnm',
-        'fzf',
-        'nuke'
-    )
-
-    $requiredModules = @(
-        'posh-git',
-        'Terminal-Icons',
-        'PSFzf',
-        'z',
-        'Microsoft.WinGet.Client',
-        'Microsoft.WinGet.CommandNotFound',
-        'gsudoModule',
-        'DockerCompletion',
-        'Microsoft.PowerShell.SecretManagement',
-        'Microsoft.PowerShell.SecretStore'
-    )
-
-    $results.Add([PSCustomObject]@{
-        Category = 'Path'
-        Name = 'DOTFILES'
-        Status = $(if (Test-Path -LiteralPath $dotfilesPath) { 'OK' } else { 'Missing' })
-        Details = $dotfilesPath
-    })
-
-    $primaryProfilePathExists = Test-Path -LiteralPath $primaryExpectedProfilePath
-    $alternateProfilePathExists = @($expectedProfilePaths | Where-Object { $_ -ne $primaryExpectedProfilePath } | Where-Object { Test-Path -LiteralPath $_ }).Count -gt 0
-
-    $results.Add([PSCustomObject]@{
-        Category = 'Path'
-        Name = 'Profile dir (' + $PSVersionTable.PSEdition + ')'
-        Status = $(if ($primaryProfilePathExists) { 'OK' } elseif ($alternateProfilePathExists) { 'Warning' } else { 'Missing' })
-        Details = $primaryExpectedProfilePath
-    })
-
-    foreach ($expectedProfilePath in $expectedProfilePaths | Where-Object { $_ -ne $primaryExpectedProfilePath }) {
-        $results.Add([PSCustomObject]@{
-            Category = 'Path'
-            Name = 'Alternate profile dir'
-            Status = $(if (Test-Path -LiteralPath $expectedProfilePath) { 'OK' } else { 'Info' })
-            Details = $expectedProfilePath
-        })
+    return [PSCustomObject]@{
+        IsDesktopEdition = $isDesktopEdition
+        DotfilesPath = $dotfilesPath
+        ExpectedProfilePaths = $expectedProfilePaths
+        PrimaryExpectedProfilePath = $primaryExpectedProfilePath
+        ProfileDirectory = Split-Path $PROFILE.CurrentUserAllHosts
+        ThemePath = [System.IO.Path]::Combine($dotfilesPath, 'PowerShell', 'dotposh', 'roryclaasen.omp.json')
+        RequiredCommands = @(
+            'git',
+            'oh-my-posh',
+            'winget',
+            'gh',
+            'dotnet',
+            'fnm',
+            'fzf',
+            'nuke'
+        )
+        RequiredModules = @(
+            'posh-git',
+            'Terminal-Icons',
+            'PSFzf',
+            'z',
+            'Microsoft.WinGet.Client',
+            'Microsoft.WinGet.CommandNotFound',
+            'gsudoModule',
+            'DockerCompletion',
+            'Microsoft.PowerShell.SecretManagement',
+            'Microsoft.PowerShell.SecretStore'
+        )
     }
+}
 
-    if (Test-Path -LiteralPath $profileDirectory) {
-        $profileDirectoryItem = Get-Item -LiteralPath $profileDirectory -Force
+function Add-DotDoctorPathChecks {
+    param(
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+        [System.Collections.Generic.List[object]]$Results,
+        [Parameter(Mandatory = $true)]
+        [object]$Context
+    )
+
+    $Results.Add((New-DotDoctorResult -Category 'Path' -Name 'DOTFILES' -Status $(if (Test-Path -LiteralPath $Context.DotfilesPath) { 'OK' } else { 'Missing' }) -Details $Context.DotfilesPath))
+
+    $primaryProfilePathExists = Test-Path -LiteralPath $Context.PrimaryExpectedProfilePath
+    $alternateProfilePathExists = @($Context.ExpectedProfilePaths | Where-Object { $_ -ne $Context.PrimaryExpectedProfilePath } | Where-Object { Test-Path -LiteralPath $_ }).Count -gt 0
+
+    $Results.Add((New-DotDoctorResult -Category 'Path' -Name ('Profile dir (' + $PSVersionTable.PSEdition + ')') -Status $(if ($primaryProfilePathExists) { 'OK' } elseif ($alternateProfilePathExists) { 'Warning' } else { 'Missing' }) -Details $Context.PrimaryExpectedProfilePath))
+
+    foreach ($expectedProfilePath in $Context.ExpectedProfilePaths | Where-Object { $_ -ne $Context.PrimaryExpectedProfilePath }) {
+        $Results.Add((New-DotDoctorResult -Category 'Path' -Name 'Alternate profile dir' -Status $(if (Test-Path -LiteralPath $expectedProfilePath) { 'OK' } else { 'Info' }) -Details $expectedProfilePath))
+    }
+}
+
+function Add-DotDoctorProfileCheck {
+    param(
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+        [System.Collections.Generic.List[object]]$Results,
+        [Parameter(Mandatory = $true)]
+        [object]$Context
+    )
+
+    if (Test-Path -LiteralPath $Context.ProfileDirectory) {
+        $profileDirectoryItem = Get-Item -LiteralPath $Context.ProfileDirectory -Force
         $isLink = -not [string]::IsNullOrWhiteSpace($profileDirectoryItem.LinkType)
         $target = if ($isLink) {
             if ($profileDirectoryItem.Target -is [System.Array]) {
@@ -93,49 +118,69 @@ function Invoke-DotDoctor {
 
         $isExpectedTarget = $false
         if ($isLink) {
-            $isExpectedTarget = $expectedProfilePaths -contains $target
+            $isExpectedTarget = $Context.ExpectedProfilePaths -contains $target
         }
 
-        $results.Add([PSCustomObject]@{
-            Category = 'Profile'
-            Name = 'CurrentUserAllHosts parent'
-            Status = $(if ($isExpectedTarget) { 'OK' } elseif ($isLink) { 'Mismatch' } else { 'NotLink' })
-            Details = if ($isLink) { "$profileDirectory -> $target" } else { $profileDirectory }
-        })
+        $status = if ($isExpectedTarget) { 'OK' } elseif ($isLink) { 'Mismatch' } else { 'NotLink' }
+        $details = if ($isLink) { "$($Context.ProfileDirectory) -> $target" } else { $Context.ProfileDirectory }
+
+        $Results.Add((New-DotDoctorResult -Category 'Profile' -Name 'CurrentUserAllHosts parent' -Status $status -Details $details))
+        return
+    }
+
+    $status = if ($Context.IsDesktopEdition -and (Test-Path -LiteralPath ([System.IO.Path]::Combine($Context.DotfilesPath, 'PowerShell')))) { 'Warning' } else { 'Missing' }
+    $details = if ($Context.IsDesktopEdition) {
+        "$($Context.ProfileDirectory) (not configured for Desktop profile path)"
     }
     else {
-        $results.Add([PSCustomObject]@{
-            Category = 'Profile'
-            Name = 'CurrentUserAllHosts parent'
-            Status = $(if ($isDesktopEdition -and (Test-Path -LiteralPath ([System.IO.Path]::Combine($dotfilesPath, 'PowerShell')))) { 'Warning' } else { 'Missing' })
-            Details = $(if ($isDesktopEdition) { "$profileDirectory (not configured for Desktop profile path)" } else { $profileDirectory })
-        })
+        $Context.ProfileDirectory
     }
 
-    $themePath = [System.IO.Path]::Combine($dotfilesPath, 'PowerShell', 'dotposh', 'roryclaasen.omp.json')
-    $results.Add([PSCustomObject]@{
-        Category = 'Theme'
-        Name = 'Oh My Posh theme'
-        Status = $(if (Test-Path -LiteralPath $themePath) { 'OK' } else { 'Missing' })
-        Details = $themePath
-    })
+    $Results.Add((New-DotDoctorResult -Category 'Profile' -Name 'CurrentUserAllHosts parent' -Status $status -Details $details))
+}
 
-    foreach ($commandName in $requiredCommands) {
+function Add-DotDoctorThemeCheck {
+    param(
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+        [System.Collections.Generic.List[object]]$Results,
+        [Parameter(Mandatory = $true)]
+        [object]$Context
+    )
+
+    $Results.Add((New-DotDoctorResult -Category 'Theme' -Name 'Oh My Posh theme' -Status $(if (Test-Path -LiteralPath $Context.ThemePath) { 'OK' } else { 'Missing' }) -Details $Context.ThemePath))
+}
+
+function Add-DotDoctorCommandChecks {
+    param(
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+        [System.Collections.Generic.List[object]]$Results,
+        [Parameter(Mandatory = $true)]
+        [object]$Context
+    )
+
+    foreach ($commandName in $Context.RequiredCommands) {
         $command = Get-Command $commandName -ErrorAction SilentlyContinue
-        $results.Add([PSCustomObject]@{
-            Category = 'Command'
-            Name = $commandName
-            Status = $(if ($null -ne $command) { 'OK' } else { 'Missing' })
-            Details = if ($null -ne $command) { $command.Source } else { '' }
-        })
+        $Results.Add((New-DotDoctorResult -Category 'Command' -Name $commandName -Status $(if ($null -ne $command) { 'OK' } else { 'Missing' }) -Details $(if ($null -ne $command) { $command.Source } else { '' })))
     }
+}
 
-    foreach ($moduleName in $requiredModules) {
+function Add-DotDoctorModuleChecks {
+    param(
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+        [System.Collections.Generic.List[object]]$Results,
+        [Parameter(Mandatory = $true)]
+        [object]$Context
+    )
+
+    foreach ($moduleName in $Context.RequiredModules) {
         $module = Get-Module -ListAvailable -Name $moduleName | Sort-Object Version -Descending | Select-Object -First 1
         $status = if ($null -ne $module) {
             'OK'
         }
-        elseif ($isDesktopEdition) {
+        elseif ($Context.IsDesktopEdition) {
             'Warning'
         }
         else {
@@ -145,26 +190,45 @@ function Invoke-DotDoctor {
         $details = if ($null -ne $module) {
             $module.Version.ToString()
         }
-        elseif ($isDesktopEdition) {
+        elseif ($Context.IsDesktopEdition) {
             'Module not installed for Windows PowerShell (Desktop edition)'
         }
         else {
             ''
         }
 
-        $results.Add([PSCustomObject]@{
-            Category = 'Module'
-            Name = $moduleName
-            Status = $status
-            Details = $details
-        })
+        $Results.Add((New-DotDoctorResult -Category 'Module' -Name $moduleName -Status $status -Details $details))
     }
+}
 
-    $okCount = @($results | Where-Object { $_.Status -eq 'OK' }).Count
-    $issueCount = @($results | Where-Object { $_.Status -in @('Missing', 'Mismatch', 'NotLink') }).Count
-    $warningCount = @($results | Where-Object { $_.Status -eq 'Warning' }).Count
+function Write-DotDoctorSummary {
+    param(
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+        [System.Collections.Generic.List[object]]$Results
+    )
+
+    $okCount = @($Results | Where-Object { $_.Status -eq 'OK' }).Count
+    $issueCount = @($Results | Where-Object { $_.Status -in @('Missing', 'Mismatch', 'NotLink') }).Count
+    $warningCount = @($Results | Where-Object { $_.Status -eq 'Warning' }).Count
 
     Write-Host "Dot Doctor: $okCount OK, $warningCount warning(s), $issueCount issue(s)"
+}
+
+function Invoke-DotDoctor {
+    [CmdletBinding()]
+    param()
+
+    $results = [System.Collections.Generic.List[object]]::new()
+    $context = Get-DotDoctorContext
+
+    Add-DotDoctorPathChecks -Results $results -Context $context
+    Add-DotDoctorProfileCheck -Results $results -Context $context
+    Add-DotDoctorThemeCheck -Results $results -Context $context
+    Add-DotDoctorCommandChecks -Results $results -Context $context
+    Add-DotDoctorModuleChecks -Results $results -Context $context
+
+    Write-DotDoctorSummary -Results $results
     return $results
 }
 
