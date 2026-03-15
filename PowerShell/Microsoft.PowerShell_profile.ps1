@@ -142,6 +142,14 @@ Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -SupportEvent -Action {
         if ($LazyLoadOhMyPosh) {
             [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
         }
+        else {
+            $line = $null
+            $cursor = $null
+            [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor)
+            if ([string]::IsNullOrEmpty($line)) {
+                [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
+            }
+        }
     }
 }
 
