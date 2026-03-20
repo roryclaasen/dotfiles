@@ -57,8 +57,8 @@ if ($EnableOhMyPosh -and $LazyLoadOhMyPosh) {
 [System.Collections.Queue]$__initQueue = @(
     {
         # Oh My Posh
-        if ($EnableOhMyPosh -and (Get-Command oh-my-posh -ErrorAction SilentlyContinue)) {
-            oh-my-posh init pwsh --config $env:POSH_THEME | Invoke-Expression
+        if ($EnableOhMyPosh) {
+            try { oh-my-posh init pwsh --config $env:POSH_THEME | Invoke-Expression } catch [System.Management.Automation.CommandNotFoundException] { }
         }
     },
     {
@@ -90,15 +90,12 @@ if ($EnableOhMyPosh -and $LazyLoadOhMyPosh) {
     },
     {
         # Dotnet Auto Completion
-        if (Get-Command dotnet -ErrorAction SilentlyContinue) {
-            dotnet completions script pwsh | Out-String | Invoke-Expression
-        }
+        try { dotnet completions script pwsh | Out-String | Invoke-Expression } catch [System.Management.Automation.CommandNotFoundException] { }
+        try { dotnet-suggest script PowerShell | Out-String | Invoke-Expression } catch [System.Management.Automation.CommandNotFoundException] { }
     },
     {
         # Fast Node Manager
-        if (Get-Command fnm -ErrorAction SilentlyContinue) {
-            fnm env --use-on-cd --shell power-shell | Out-String | Invoke-Expression
-        }
+        try { fnm env --use-on-cd --shell power-shell | Out-String | Invoke-Expression } catch [System.Management.Automation.CommandNotFoundException] { }
     },
     {
         # Docker Auto Completion
@@ -111,9 +108,7 @@ if ($EnableOhMyPosh -and $LazyLoadOhMyPosh) {
     },
     {
         # GitHub CLI
-        if (Get-Command gh -ErrorAction SilentlyContinue) {
-            gh completion -s powershell | Out-String | Invoke-Expression
-        }
+        try { gh completion -s powershell | Out-String | Invoke-Expression } catch [System.Management.Automation.CommandNotFoundException] { }
     },
     {
         # Nuke
