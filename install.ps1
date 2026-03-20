@@ -14,6 +14,9 @@ param(
     [switch]$PSOptionalRequirements = $false,
 
     [Parameter(Mandatory = $false, ParameterSetName = "Picky")]
+    [switch]$DotnetOptionalRequirements = $false,
+
+    [Parameter(Mandatory = $false, ParameterSetName = "Picky")]
     [switch]$DotFiles = $false,
 
     [Parameter(Mandatory = $false, ParameterSetName = "Picky")]
@@ -145,18 +148,30 @@ function Install-PSOptionalRequirements {
     )
 
     $OptionalRequirements | ForEach-Object { Install-ModuleIfMissing -Name $_ }
+}
 
-    if (Get-Command dotnet -ErrorAction SilentlyContinue) {
-        if (Get-Command nuke -ErrorAction SilentlyContinue) {
-            Write-Host "[=] Nuke.GlobalTool already installed. Skipping."
+function Install-DotnetOptionalRequirements {
+    Write-Host "[+] Installing Dotnet Optional Requirements..."
+
+    if (-not (Get-Command dotnet -ErrorAction SilentlyContinue)) {
+        Write-Warning "[+] dotnet is not installed. Skipping dotnet optional requirements."
+        return
+    }
+
+    $DotnetTools = @(
+        'Nuke.GlobalTool',
+        'dotnet-suggest'
+    )
+
+    foreach ($tool in $DotnetTools) {
+        $installed = dotnet tool list --global 2>$null | Select-String -Pattern "^$([regex]::Escape($tool))\b" -Quiet
+        if ($installed) {
+            Write-Host "[=] Dotnet tool '$tool' already installed. Skipping."
         }
         else {
-            Write-Host "[+] Installing Nuke.GlobalTool..."
-            dotnet tool install --global Nuke.GlobalTool | Out-Null
+            Write-Host "[+] Installing dotnet tool '$tool'..."
+            dotnet tool install --global $tool | Out-Null
         }
-    }
-    else {
-        Write-Warning "[+] dotnet is not installed. Skipping Nuke.GlobalTool install."
     }
 }
 
@@ -266,6 +281,10 @@ if ($InstallAll -or $PSRequirements) {
 
 if ($PSOptionalRequirements) {
     Install-PSOptionalRequirements
+}
+
+if ($DotnetOptionalRequirements) {
+    Install-DotnetOptionalRequirements
 }
 
 if ($InstallAll -or $DotFiles) {

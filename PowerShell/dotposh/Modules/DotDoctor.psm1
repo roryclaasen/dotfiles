@@ -52,6 +52,7 @@ function Get-DotDoctorContext {
             'winget',
             'gh',
             'dotnet',
+            'dotnet-suggest',
             'fnm',
             'fzf',
             'nuke'
