@@ -202,6 +202,30 @@ function Add-DotDoctorModuleChecks {
     }
 }
 
+function Format-DotDoctorStatus {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Status,
+
+        [Parameter(Mandatory = $false)]
+        [string]$Label
+    )
+
+    $text = if ($Label) { $Label } else { $Status }
+
+    if (-not (Test-Ansi)) {
+        return $text
+    }
+
+    switch ($Status) {
+        'Missing' { return "`e[31m$text`e[0m" }
+        'Mismatch' { return "`e[31m$text`e[0m" }
+        'NotLink' { return "`e[31m$text`e[0m" }
+        'Warning' { return "`e[33m$text`e[0m" }
+        default { return $text }
+    }
+}
+
 function Write-DotDoctorSummary {
     param(
         [Parameter(Mandatory = $true)]
@@ -213,7 +237,10 @@ function Write-DotDoctorSummary {
     $issueCount = @($Results | Where-Object { $_.Status -in @('Missing', 'Mismatch', 'NotLink') }).Count
     $warningCount = @($Results | Where-Object { $_.Status -eq 'Warning' }).Count
 
-    Write-Host "Dot Doctor: $okCount OK, $warningCount warning(s), $issueCount issue(s)"
+    $warningText = Format-DotDoctorStatus -Status 'Warning' -Label "$warningCount warning(s)"
+    $issueText = Format-DotDoctorStatus -Status 'Missing' -Label "$issueCount issue(s)"
+
+    Write-Host "Dot Doctor: $okCount OK, $warningText, $issueText"
 }
 
 function Invoke-DotDoctor {
@@ -230,6 +257,11 @@ function Invoke-DotDoctor {
     Add-DotDoctorModuleChecks -Results $results -Context $context
 
     Write-DotDoctorSummary -Results $results
+
+    foreach ($result in $results) {
+        $result.Status = Format-DotDoctorStatus -Status $result.Status
+    }
+
     return $results
 }
 
