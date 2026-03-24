@@ -213,15 +213,11 @@ function Format-DotDoctorStatus {
 
     $text = if ($Label) { $Label } else { $Status }
 
-    if (-not (Test-Ansi)) {
-        return $text
-    }
-
     switch ($Status) {
-        'Missing' { return "`e[31m$text`e[0m" }
-        'Mismatch' { return "`e[31m$text`e[0m" }
-        'NotLink' { return "`e[31m$text`e[0m" }
-        'Warning' { return "`e[33m$text`e[0m" }
+        'Missing' { return Format-Color Red $text }
+        'Mismatch' { return Format-Color Red $text }
+        'NotLink' { return Format-Color Red $text }
+        'Warning' { return Format-Color Yellow $text }
         default { return $text }
     }
 }

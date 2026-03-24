@@ -102,6 +102,60 @@ function Format-Hyperlink {
     return "$Uri"
 }
 
+<#
+.SYNOPSIS
+    Formats text with an ANSI color based on a PowerShell ConsoleColor name.
+
+.DESCRIPTION
+    Wraps the given text in ANSI escape sequences corresponding to the specified
+    ConsoleColor value. Falls back to plain text when the terminal does not
+    support ANSI sequences.
+
+.PARAMETER Color
+    A System.ConsoleColor value (e.g. Red, Green, DarkYellow).
+
+.PARAMETER Text
+    The text to colorize.
+
+.OUTPUTS
+    [string] The text wrapped in ANSI color codes, or plain text if unsupported.
+#>
+function Format-Color {
+    param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        [System.ConsoleColor] $Color,
+
+        [Parameter(Mandatory = $true, Position = 1, ValueFromPipeline = $true)]
+        [string] $Text
+    )
+
+    if (-not (Test-Ansi)) {
+        return $Text
+    }
+
+    $ansiCode = switch ($Color) {
+        ([System.ConsoleColor]::Black) { '30' }
+        ([System.ConsoleColor]::DarkRed) { '31' }
+        ([System.ConsoleColor]::DarkGreen) { '32' }
+        ([System.ConsoleColor]::DarkYellow) { '33' }
+        ([System.ConsoleColor]::DarkBlue) { '34' }
+        ([System.ConsoleColor]::DarkMagenta) { '35' }
+        ([System.ConsoleColor]::DarkCyan) { '36' }
+        ([System.ConsoleColor]::Gray) { '37' }
+        ([System.ConsoleColor]::DarkGray) { '90' }
+        ([System.ConsoleColor]::Red) { '91' }
+        ([System.ConsoleColor]::Green) { '92' }
+        ([System.ConsoleColor]::Yellow) { '93' }
+        ([System.ConsoleColor]::Blue) { '94' }
+        ([System.ConsoleColor]::Magenta) { '95' }
+        ([System.ConsoleColor]::Cyan) { '96' }
+        ([System.ConsoleColor]::White) { '97' }
+    }
+
+    return "`e[${ansiCode}m${Text}`e[0m"
+}
+
 Export-ModuleMember -Function Test-Ansi
 Export-ModuleMember -Function Test-RichTerminal
 Export-ModuleMember -Function Format-Hyperlink
+Export-ModuleMember -Function Format-Color
