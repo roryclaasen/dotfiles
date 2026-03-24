@@ -233,8 +233,8 @@ function Write-DotDoctorSummary {
     $issueCount = @($Results | Where-Object { $_.Status -in @('Missing', 'Mismatch', 'NotLink') }).Count
     $warningCount = @($Results | Where-Object { $_.Status -eq 'Warning' }).Count
 
-    $warningText = Format-DotDoctorStatus -Status 'Warning' -Label "$warningCount warning(s)"
-    $issueText = Format-DotDoctorStatus -Status 'Missing' -Label "$issueCount issue(s)"
+    $warningText = if ($warningCount -gt 0) { Format-DotDoctorStatus -Status 'Warning' -Label "$warningCount warning(s)" } else { "$warningCount warning(s)" }
+    $issueText = if ($issueCount -gt 0) { Format-DotDoctorStatus -Status 'Missing' -Label "$issueCount issue(s)" } else { "$issueCount issue(s)" }
 
     Write-Host "Dot Doctor: $okCount OK, $warningText, $issueText"
 }
@@ -254,11 +254,12 @@ function Invoke-DotDoctor {
 
     Write-DotDoctorSummary -Results $results
 
-    foreach ($result in $results) {
-        $result.Status = Format-DotDoctorStatus -Status $result.Status
-    }
-
-    return $results
+    $results | Format-Table -Property @(
+        'Category',
+        'Name',
+        @{ Label = 'Status'; Expression = { Format-DotDoctorStatus -Status $_.Status } },
+        'Details'
+    )
 }
 
 Set-Alias 'dotdoctor' 'Invoke-DotDoctor'
