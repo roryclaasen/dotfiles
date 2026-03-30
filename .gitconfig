@@ -68,9 +68,6 @@
 
     azreposCredentialType = oauth
 
-	helper =
-	helper = C:/Users/roryclaasen/.dotnet/tools/git-credential-manager.exe
-
 [diff]
     renames = copies
     # mnemonicprefix = true
