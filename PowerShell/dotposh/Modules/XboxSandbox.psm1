@@ -1,4 +1,8 @@
 function Get-ConfigFilePath {
+    if (-not [string]::IsNullOrWhiteSpace($env:SANDBOX_CONFIG_PATH)) {
+        return $env:SANDBOX_CONFIG_PATH
+    }
+
     $FileName = "Sandboxes.json"
 
     $JsonFile = [System.IO.Path]::Combine($PSScriptRoot, $FileName)
