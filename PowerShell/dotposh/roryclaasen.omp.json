@@ -11,6 +11,7 @@
     "dotnet": "#b915ff",
     "java": "#f6901d",
     "node": "#709d53",
+    "pnpm": "#f69220",
     "python": "#906cff",
     "docker": "#1c90ed",
     "xbox": "#14a314"
@@ -41,13 +42,14 @@
         },
         {
           "type": "text",
+          "streaming": 300,
           "style": "plain",
           "template": "{{ if .Env.DOT_LOADING }}<p:block>-[</><f>󱗿</f><p:block>]</>{{ end }}",
           "foreground": "p:root"
         },
         {
           "type": "git",
-          "streaming": 100,
+          "streaming": 300,
           "style": "plain",
           "options": {
             "fetch_status": true,
@@ -94,30 +96,42 @@
         },
         {
           "type": "dotnet",
+          "streaming": 300,
           "style": "plain",
           "foreground": "p:dotnet",
           "template": "<p:block>-[</> {{ .Full }}<p:block>]</>"
         },
         {
           "type": "java",
+          "streaming": 300,
           "style": "plain",
           "foreground": "p:java",
           "template": "<p:block>-[</> {{ .Full }}<p:block>]</>"
         },
         {
           "type": "node",
+          "streaming": 300,
           "style": "plain",
           "foreground": "p:node",
           "template": "<p:block>-[</>󰎙 {{ .Full }}<p:block>]</>"
         },
         {
+          "type": "pnpm",
+          "streaming": 300,
+          "style": "plain",
+          "foreground": "p:pnpm",
+          "template": "<p:block>-[</> {{ .Full }}<p:block>]</>"
+        },
+        {
           "type": "python",
+          "streaming": 300,
           "style": "plain",
           "foreground": "p:python",
           "template": "<p:block>-[</> {{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}<p:block>]</>"
         },
         {
           "type": "docker",
+          "streaming": 300,
           "style": "plain",
           "foreground": "p:docker",
           "template": "<p:block>-[</> {{ .Context  }}<p:block>]</>"
