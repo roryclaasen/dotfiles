@@ -2,7 +2,7 @@
     defaultBranch = main
 
 [core]
-    safecrlf = false
+    safecrlf = warn
     # editor = 'C:/Program Files/Notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin
     editor = code --wait
     fscache = true
