@@ -19,7 +19,14 @@ function ip {
     $defaultRoute = Get-NetRoute -DestinationPrefix '0.0.0.0/0' | Sort-Object -Property RouteMetric | Select-Object -First 1
     return (Get-NetIPAddress -InterfaceIndex $defaultRoute.InterfaceIndex -AddressFamily IPv4).IPAddress
 }
-function fqdn { ($env:COMPUTERNAME -and $env:USERDNSDOMAIN) ? "$($env:COMPUTERNAME).$($env:USERDNSDOMAIN)" : $env:COMPUTERNAME }
+function fqdn {
+    if (-not [string]::IsNullOrWhiteSpace($env:COMPUTERNAME) -and -not [string]::IsNullOrWhiteSpace($env:USERDNSDOMAIN))
+    {
+        return "$($env:COMPUTERNAME).$($env:USERDNSDOMAIN)"
+    }
+
+    return $env:COMPUTERNAME
+}
 
 # PowerShell reload /restart
 function Invoke-ProfileReload {
