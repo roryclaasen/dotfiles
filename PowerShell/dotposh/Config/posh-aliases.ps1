@@ -50,6 +50,9 @@ Set-Alias "reload" Invoke-ProfileReload
 # Gsudo
 Set-Alias 'sudo' 'gsudo'
 
+# Why is this running?
+Set-Alias 'why' 'witr'
+
 
 # Windows System
 function paths { $env:PATH -Split ';' | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" } | Sort-Object | Format-List }
