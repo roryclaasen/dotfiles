@@ -148,6 +148,7 @@
     last = log -1 HEAD --stat
     lch = log -n 1 --pretty=format:'%H'
     contrib = shortlog -e --summary --numbered
+    contribLoC = "!git ls-files | xargs -n1 git blame --line-porcelain | sed -n 's/^author //p' | sort -f | uniq -ic | sort -nr"
 
     # diff
     cdiff = difftool --tool code
@@ -162,6 +163,7 @@
     # config
     root = rev-parse --show-toplevel
     al = config --get-regexp alias
+    whoami = "!git config user.name && git config user.email"
 
 [url "git@github.com:"]
     insteadof = github:
