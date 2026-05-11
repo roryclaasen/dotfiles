@@ -153,6 +153,11 @@
     cdiff = difftool --tool code
     diffdir = difftool --dir-diff --tool code
 
+    # worktree
+    wt = worktree
+    wtl = worktree list
+    wtadd = worktree add
+    wtprune = worktree prune
 
     # config
     root = rev-parse --show-toplevel
