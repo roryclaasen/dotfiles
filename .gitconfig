@@ -158,6 +158,7 @@
     wt = worktree
     wtl = worktree list
     wtadd = worktree add
+    wtdel = worktree remove
     wtprune = worktree prune
 
     # config
