@@ -105,7 +105,6 @@ Register-ArgumentCompleter -CommandName Set-Worktree, cd_worktree, cd_wt, wt -Pa
         }
 }
 
-
 Export-ModuleMember -Function Get-GitWorktree
 Export-ModuleMember -Function Set-Worktree
 Export-ModuleMember -Alias cd_worktree
