@@ -14,22 +14,22 @@ function Get-EnvironmentVariables {
     $variables = @()
     if ($PsCmdlet.ParameterSetName -eq "Picky") {
         if ($User) {
-            $variables += [System.Environment]::GetEnvironmentVariables([System.EnvironmentVariableTarget]::User)
+            $variables += [System.Environment]::GetEnvironmentVariables([System.EnvironmentVariableTarget]::User).GetEnumerator()
         }
 
         if ($System) {
-            $variables += [System.Environment]::GetEnvironmentVariables([System.EnvironmentVariableTarget]::Machine)
+            $variables += [System.Environment]::GetEnvironmentVariables([System.EnvironmentVariableTarget]::Machine).GetEnumerator()
         }
 
         if ($Process) {
-            $variables += [System.Environment]::GetEnvironmentVariables([System.EnvironmentVariableTarget]::Process)
+            $variables += [System.Environment]::GetEnvironmentVariables([System.EnvironmentVariableTarget]::Process).GetEnumerator()
         }
     }
     else {
         $variables += Get-ChildItem env:*
     }
 
-    return $variables  | Sort-Object name
+    return $variables  | Sort-Object Name
 }
 
 Set-Alias 'Get-Env' 'Get-EnvironmentVariables'
