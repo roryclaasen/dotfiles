@@ -56,6 +56,7 @@ function Test-EnvironmentVariablePaths {
     }
 
     $excludeNames = @('IGCCSVC_DB');
+    $networkPathPattern = '^(\\\\|//)'
 
     $results = foreach ($variable in Get-EnvironmentVariables @getParams) {
         $value = $variable.Value
@@ -68,18 +69,26 @@ function Test-EnvironmentVariablePaths {
             if ($path -notmatch '[\\/]') { continue }
 
             $expanded = [System.Environment]::ExpandEnvironmentVariables($path)
-            $exists = Test-Path -LiteralPath $expanded -PathType Container
+            $status = if ($expanded -match $networkPathPattern) {
+                'Ignored'
+            }
+            elseif (Test-Path -LiteralPath $expanded -PathType Container) {
+                'OK'
+            }
+            else {
+                'Missing'
+            }
 
             [PSCustomObject]@{
                 Name   = $variable.Name
                 Path   = $path
-                Exists = [bool]$exists
+                Status = $status
             }
         }
     }
 
     if ($MissingOnly) {
-        return $results | Where-Object { -not $_.Exists }
+        return $results | Where-Object { $_.Status -eq 'Missing' }
     }
 
     return $results
