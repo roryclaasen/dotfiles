@@ -55,6 +55,8 @@ function Test-EnvironmentVariablePaths {
         if ($Process) { $getParams.Process = $true }
     }
 
+    $excludeNames = @('IGCCSVC_DB');
+
     $results = foreach ($variable in Get-EnvironmentVariables @getParams) {
         $value = $variable.Value
         if ([string]::IsNullOrWhiteSpace($value)) { continue }
@@ -62,6 +64,7 @@ function Test-EnvironmentVariablePaths {
         foreach ($entry in $value.Split([System.IO.Path]::PathSeparator)) {
             $path = $entry.Trim().Trim('"')
             if ([string]::IsNullOrWhiteSpace($path)) { continue }
+            if ($excludeNames -contains $variable.Name) { continue }
             if ($path -notmatch '[\\/]') { continue }
 
             $expanded = [System.Environment]::ExpandEnvironmentVariables($path)
