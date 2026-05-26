@@ -57,6 +57,7 @@ function Test-EnvironmentVariablePaths {
 
     $excludeNames = @('IGCCSVC_DB');
     $networkPathPattern = '^(\\\\|//)'
+    $uriPattern = '://'
 
     $results = foreach ($variable in Get-EnvironmentVariables @getParams) {
         $value = $variable.Value
@@ -69,10 +70,10 @@ function Test-EnvironmentVariablePaths {
             if ($path -notmatch '[\\/]') { continue }
 
             $expanded = [System.Environment]::ExpandEnvironmentVariables($path)
-            $status = if ($expanded -match $networkPathPattern) {
+            $status = if ($path -match $uriPattern -or $expanded -match $networkPathPattern) {
                 'Ignored'
             }
-            elseif (Test-Path -LiteralPath $expanded -PathType Container) {
+            elseif (Test-Path -LiteralPath $expanded) {
                 'OK'
             }
             else {
