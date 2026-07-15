@@ -12,9 +12,6 @@
         },
         {
           "PackageIdentifier": "gerardog.gsudo"
-        },
-        {
-          "PackageIdentifier": "Microsoft.Coreutils"
         }
       ],
       "SourceDetails": {
