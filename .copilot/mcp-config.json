@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "oh-my-posh-validator": {
+      "type": "http",
+      "url": "https://ohmyposh.dev/api/mcp",
+      "tools": [
+        "validate_config",
+        "validate_segment"
+      ]
+    }
+  }
+}
