@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "oh-my-pish-validator": {
+      "url": "https://ohmyposh.dev/api/mcp",
+      "type": "http"
+    }
+  },
+  "inputs": []
+}
