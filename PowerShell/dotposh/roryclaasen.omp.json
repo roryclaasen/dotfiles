@@ -52,6 +52,7 @@
           "streaming": 300,
           "style": "plain",
           "options": {
+            "native_status": true,
             "fetch_status": true,
             "fetch_upstream_icon": true,
             "source": "cli",
