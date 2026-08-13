@@ -9,6 +9,7 @@
     fsmonitor = true
     excludesfile = ~/.gitignore_global
     symlinks = true
+    longpaths = true
 
 [color]
     diff = auto
