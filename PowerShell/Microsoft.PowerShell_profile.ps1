@@ -97,15 +97,15 @@ if ($EnableOhMyPosh -and $LazyLoadOhMyPosh) {
         # Fast Node Manager
         try { fnm env --use-on-cd --shell power-shell | Out-String | Invoke-Expression } catch [System.Management.Automation.CommandNotFoundException] { }
     },
-    {
-        # Docker Auto Completion
-        try { Import-Module -Name DockerCompletion } catch [System.Management.Automation.CommandNotFoundException] { }
-    },
-    {
-        # Secret Management
-        try { Import-Module -Name Microsoft.PowerShell.SecretManagement } catch [System.Management.Automation.CommandNotFoundException] { }
-        try { Import-Module -Name Microsoft.PowerShell.SecretStore } catch [System.Management.Automation.CommandNotFoundException] { }
-    },
+    # {
+    #     # Docker Auto Completion
+    #     try { Import-Module -Name DockerCompletion } catch [System.Management.Automation.CommandNotFoundException] { }
+    # },
+    # {
+    #     # Secret Management
+    #     try { Import-Module -Name Microsoft.PowerShell.SecretManagement } catch [System.Management.Automation.CommandNotFoundException] { }
+    #     try { Import-Module -Name Microsoft.PowerShell.SecretStore } catch [System.Management.Automation.CommandNotFoundException] { }
+    # },
     {
         # GitHub CLI
         try { gh completion -s powershell | Out-String | Invoke-Expression } catch [System.Management.Automation.CommandNotFoundException] { }
